@@ -29,10 +29,15 @@ unfortunate.  I like the idea of possibly having multiple paddles on the screen 
 
 General Descriptions of the Different Levels:
 I want to implement beginning, intermediate and advanced versions of each of my levels.  The difficulty will be
-determined by the amount of time given to complete the level, the frequency of getting power ups, and the ball speed
-(the ball speed in some ways is a trade-off because the player will get to destroy blocks faster but it will be easier
-to lose).
+determined by the amount of time given to complete the level, the frequency of getting power ups, and the starting ball
+speed (the ball speed in some ways is a trade-off because the player will get to destroy blocks faster but it will be
+easier to lose).
 
+I will create three levels, each with a beginning, intermdiate, and advanced mode.  In the first level the blocks will
+be laid out in the shape of a '1', on the second level the blocks will be laid out in the shape of the word 'TWO' and in
+ the third level the blocks will be laid out in the shape of the word 'THREE'.  Hence, each level will include more
+ blocks and more blocks closer to the bottom of the screen making them more difficult.
+ 
 
 
 Different Types of Blocks:
@@ -67,12 +72,20 @@ the game in which the time may be a real issue.
 
 I will also add an extra life power up that gives the player another life.
 
+I will also add a power up that produces another paddle to help the player
+
 
 
 
 Cheat Keys:
+'L' - add another life
+'R' - reset the level
+'T' - give infinite time
+'D' - Destroy any block by clicking on it
+# keys - Jump to level of that number
+'P' - gain access to all power ups (except extra life and extra time since handled by other cheat keys)
 
-
+I am still thinking through the cheat keys because I do not really know what could be a valuable cheat key
 
 
 
