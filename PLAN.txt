@@ -26,3 +26,62 @@ same game.  I think the controls would be difficult for the player but the idea 
 other hand, the way that the flappers were positioned made it unlikely that they could ever really be used which was
 unfortunate.  I like the idea of possibly having multiple paddles on the screen at one time as a power up.
 
+
+General Descriptions of the Different Levels:
+I want to implement beginning, intermediate and advanced versions of each of my levels.  The difficulty will be
+determined by the amount of time given to complete the level, the frequency of getting power ups, and the ball speed
+(the ball speed in some ways is a trade-off because the player will get to destroy blocks faster but it will be easier
+to lose).
+
+
+
+Different Types of Blocks:
+The generic block will be destroyed with one hit (destroying this block will give the player 10 points0
+There will be another block that takes 2 hits to destroy - it will turn into the generic block after the first hit
+(first hit will be worth 10 points and second worth 10 points for 20 points total)
+There will be a third block that takes 3 hits to destroy - it will turn into a 2-hit block after the first hit
+(first hit will be worth 10 points and second worth 10 points and third worth 10 points for 30 points total)
+
+Any of these three blocks listed above can drop power-ups.
+
+There will also be blocks that cannot be destroyed and do not give any points - these are not taken into account when
+determining if the user has defeated the level
+
+There will be some red blocks that cause the player to lose a life if they are hit - these are not taken into account
+when determining if the user has defeated the level
+
+
+
+Different Types of Power-ups:
+One power up will be the ability to select a block and destroy it.  This power up could be very valuable for helping
+players destroy hard to reach blocks or blocks that take several hits to destroy.
+
+Another power up will be dropping balls from the top of the screen to essentially put one hit on each of the top layer
+of bricks.
+
+Another power up I plan to implement is a power up the makes the paddle longer for a period of time.  This will make it
+easier to stay alive.
+
+Another power up will add more time to the clock.  This power up will be particularly valuable in the advanced modes of
+the game in which the time may be a real issue.
+
+I will also add an extra life power up that gives the player another life.
+
+
+
+
+Cheat Keys:
+
+
+
+
+
+
+Something Extra:
+My something extra is going to be a tutorial mode that uses a very easy block configuration to show the user how to play
+ and to introduce the user to all the different power ups.  The tutorial will also point out the features of the game
+ such as pointing to were the number of lives remaining is, how to pause the game and change the difficulty, etc.
+
+
+
+
