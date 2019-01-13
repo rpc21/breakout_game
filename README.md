@@ -3,11 +3,11 @@ game
 
 This project implements the game of Breakout.
 
-Name: 
+Name: Ryan Culhane
 
 ### Timeline
 
-Start Date: 
+Start Date: 1/13/2019
 
 Finish Date: 
 
