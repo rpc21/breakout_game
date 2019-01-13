@@ -1,0 +1,28 @@
+This file contains the plan for my Breakout Game.
+
+Opinions on other versions of breakout:
+
+Circus - I thought the circus game was very successful in its use of physics.  I liked that the characters jumped in
+arcs and that it mattered where the character landed on the see-saw.  Specifically, I thought it was a nice touch to
+make it so if the character didn't land at a rather ideal part of the see-saw the character wouldn't jump high enough to
+ eliminate any blocks.
+
+Vortex - Vortex had the most interesting graphics of any of the games to me.  I thought the circular nature and the
+sense of depth that was created on the screen was very visually appealing but would be too difficult for me to implement
+.  However, I did not like that the ball would just break through the bricks and continue along their path instead of
+bouncing off the bricks that it hit.  I was also unsure how the laser was used.  I like that the laser in theory could
+allow the user to eliminate bricks with more control but I am unsure how it actually functioned in the vortex game.  I
+also liked that the levels had a time limit.  I think this could be an easy way to increase or decrease the difficulty
+of any given level.
+
+Centipong - Centipong's rules were not immediately clear to me just from watching the game.  I was unsure as to what the
+ objective of the game was which I think is a bad sign.  However, I thought the physics behind how the balls bounce off
+ the paddle was well implemented.  I liked how the ball bounce depended on the paddle's speed and direction.
+ Furthermore, the power-ups in Centipong were interesting.  I liked when there were a bunch of balls on the screen at
+ the same time and I plan to implement a similar feature in my game.
+
+Pinball Breakout - I thought it was an interesting idea to have different kinds of paddles and pinball flappers in the
+same game.  I think the controls would be difficult for the player but the idea is pretty ambitious and cool.  On the
+other hand, the way that the flappers were positioned made it unlikely that they could ever really be used which was
+unfortunate.  I like the idea of possibly having multiple paddles on the screen at one time as a power up.
+
