@@ -40,14 +40,16 @@ public class ExampleBounce extends Application {
     public static final Paint GROWER_COLOR = Color.BISQUE;
     public static final double GROWER_RATE = 1.1;
     public static final int GROWER_SIZE = 50;
+    public static final String PADDLE_IMAGE = "paddle.gif";
     
 
     // some things we need to remember during our game
     private Scene myScene;
 //    private ImageView myBouncer;
     private List<Bouncer> myBouncers;
-    private Rectangle myMover;
+//    private Rectangle myPaddle;
     private Rectangle myGrower;
+    private ImageView myPaddle;
 
     
     /**
@@ -78,6 +80,8 @@ public class ExampleBounce extends Application {
         // make some shapes and set their properties
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
 //        myBouncer = new ImageView(image);
+        var paddle = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
+        myPaddle = new ImageView(paddle);
         // x and y represent the top left corner, so center it
 //        myBouncer.setX(width / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
 //        myBouncer.setY(height / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
@@ -89,14 +93,17 @@ public class ExampleBounce extends Application {
             myBouncers.add(bouncer);
             root.getChildren().add(bouncer);
         }
-        myMover = new Rectangle(width / 2 - 25, height / 2 - 100, MOVER_SIZE, MOVER_SIZE);
-        myMover.setFill(MOVER_COLOR);
+//        myPaddle = new Rectangle(width / 2 - 25, height / 2 - 100, MOVER_SIZE, MOVER_SIZE);
+//        myPaddle.setFill(MOVER_COLOR);
         myGrower = new Rectangle(width / 2 - 25, height / 2 + 50, GROWER_SIZE, GROWER_SIZE);
         myGrower.setFill(GROWER_COLOR);
         // order added to the group is the order in which they are drawn
 //        root.getChildren().add(myBouncers);
-        root.getChildren().add(myMover);
-        root.getChildren().add(myGrower);
+        myPaddle.setX(SIZE/2);
+        myPaddle.setY(SIZE-50);
+//        root.getChildren().add(myPaddle);
+//        root.getChildren().add(myGrower);
+        root.getChildren().add(myPaddle);
         // respond to input, the e gives a name to the event that happened so you can get the info
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
@@ -120,18 +127,18 @@ public class ExampleBounce extends Application {
         else{
             myGrower.setFill(GROWER_COLOR);
         }
-        myMover.setRotate(myMover.getRotate() - 1);
+//        myPaddle.setRotate(myPaddle.getRotate() - 1);
         myGrower.setRotate(myGrower.getRotate() + 1);
 
         // check for collisions
         // with shapes, can check precisely
-        var intersect = Shape.intersect(myMover, myGrower);
-        if (intersect.getBoundsInLocal().getWidth() != -1) {
-            myMover.setFill(HIGHLIGHT);
-        }
-        else {
-            myMover.setFill(MOVER_COLOR);
-        }
+//        var intersect = Shape.intersect(myPaddle, myGrower);
+//        if (intersect.getBoundsInLocal().getWidth() != -1) {
+//            myPaddle.setFill(HIGHLIGHT);
+//        }
+//        else {
+//            myPaddle.setFill(MOVER_COLOR);
+//        }
         // with images can only check bounding box
 //        if (myGrower.getBoundsInParent().intersects(myBouncer.getBoundsInParent())) {
 //            myGrower.setFill(HIGHLIGHT);
@@ -144,16 +151,16 @@ public class ExampleBounce extends Application {
     // What to do each time a key is pressed
     private void handleKeyInput (KeyCode code) {
         if (code == KeyCode.RIGHT) {
-            myMover.setX(myMover.getX() + MOVER_SPEED);
+            myPaddle.setX(myPaddle.getX() + MOVER_SPEED);
         }
         else if (code == KeyCode.LEFT) {
-            myMover.setX(myMover.getX() - MOVER_SPEED);
+            myPaddle.setX(myPaddle.getX() - MOVER_SPEED);
         }
         else if (code == KeyCode.UP) {
-            myMover.setY(myMover.getY() - MOVER_SPEED);
+            myPaddle.setY(myPaddle.getY() - MOVER_SPEED);
         }
         else if (code == KeyCode.DOWN) {
-            myMover.setY(myMover.getY() + MOVER_SPEED);
+            myPaddle.setY(myPaddle.getY() + MOVER_SPEED);
         }
     }
 
