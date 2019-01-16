@@ -11,16 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -48,6 +46,8 @@ public class GamePlayer extends Application{
     private Button playGameButton;
     private Button playTutorialButton;
     private Button cheatKeysButton;
+    private ImageView myPaddle;
+    private Text welcomeText;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -71,25 +71,15 @@ public class GamePlayer extends Application{
     }
 
     private void step(double secondDelay) {
-//        myWelcomeScreen.setFitHeight(myScene.getHeight());
-//        myWelcomeScreen.setFitWidth(myScene.getWidth());
         welcomeScreenBackground.setHeight(myScene.getHeight());
         welcomeScreenBackground.setWidth(myScene.getWidth());
-//        trialButton.setLayoutX(SIZE/2.0 - trialButton.getWidth()/2.0);
-//        System.out.println(trialButton.getWidth());
     }
 
     private Scene setupStartPage(int width, int height, Paint background) {
-        var root = new Group();
+//        var root = new Group();
+        StackPane root = new StackPane();
         var scene = new Scene(root, width, height, background);
-        var backgroundImage = new Image(this.getClass().getClassLoader().getResourceAsStream(WELCOME_PAGE_BACKGROUND));
 
-        myWelcomeScreen = new ImageView(backgroundImage);
-
-        myWelcomeScreen.setFitHeight(scene.getHeight());
-        myWelcomeScreen.setFitWidth(scene.getWidth());
-        myWelcomeScreen.setX(0.0D);
-        myWelcomeScreen.setY(0.0D);
 
 //        https://docs.oracle.com/javafx/2/layout/builtin_layouts.htm
         welcomeScreenBackground = new Rectangle(width, height);
@@ -100,6 +90,15 @@ public class GamePlayer extends Application{
                         new Stop(1,Color.web("#9CB6CF")),}));
         welcomeScreenBackground.setStroke(Color.web("#D0E6FA"));
 
+        var paddle = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
+        myPaddle = new ImageView(paddle);
+
+
+        welcomeText = new Text("Welcome to Breakout");
+        welcomeText.setFont(Font.font("Palatino", FontWeight.BOLD, 40.0D));
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+
+
 
         playGameButton = new Button("Play Game");
         playGameButton.setPrefWidth(100.0D);
@@ -109,17 +108,19 @@ public class GamePlayer extends Application{
         cheatKeysButton.setPrefWidth(100.0D);
 
 
-        VBox vBox = new VBox(10);
+
+        VBox vBox = new VBox(SIZE/40.0);
+        vBox.getChildren().addAll(new Text(""),new Text(""), new Text(""));
+        vBox.getChildren().add(myPaddle);
+        vBox.getChildren().add(new Text(""));
+        vBox.getChildren().add(welcomeText);
+        vBox.getChildren().add(new Text(""));
         vBox.getChildren().addAll(playGameButton, playTutorialButton, cheatKeysButton);
-//        vBox.setAlignment(Pos.CENTER);
-        vBox.setPrefWidth(100.0D);
-        vBox.setLayoutX(width/2 - 40.0D);
-        vBox.setLayoutY(height / 1.5);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().add(new Text(""));
 
         root.getChildren().add(welcomeScreenBackground);
         root.getChildren().add(vBox);
-//        root.getChildren().add(hBox);
-//        root.getChildren().add(trialButton);
 
 
 
