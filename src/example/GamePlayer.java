@@ -58,6 +58,8 @@ public class GamePlayer extends Application{
     }
 
     private void step(double secondDelay) {
+        myWelcomeScreen.setFitHeight(myScene.getHeight());
+        myWelcomeScreen.setFitWidth(myScene.getWidth());
     }
 
     private Scene setupStartPage(int width, int height, Paint background) {
@@ -66,8 +68,9 @@ public class GamePlayer extends Application{
         var backgroundImage = new Image(this.getClass().getClassLoader().getResourceAsStream(WELCOME_PAGE_BACKGROUND));
 
         myWelcomeScreen = new ImageView(backgroundImage);
-        myWelcomeScreen.setFitHeight(SIZE);
-        myWelcomeScreen.setFitWidth(SIZE);
+
+        myWelcomeScreen.setFitHeight(scene.getHeight());
+        myWelcomeScreen.setFitWidth(scene.getWidth());
         myWelcomeScreen.setX(0.0D);
         myWelcomeScreen.setY(0.0D);
 
