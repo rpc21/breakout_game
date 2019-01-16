@@ -128,7 +128,6 @@ public class ExampleBounce extends Application {
             myGrower.setFill(GROWER_COLOR);
         }
 //        myPaddle.setRotate(myPaddle.getRotate() - 1);
-        myGrower.setRotate(myGrower.getRotate() + 1);
 
         // check for collisions
         // with shapes, can check precisely
