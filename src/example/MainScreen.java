@@ -33,11 +33,11 @@ public class MainScreen extends GenericScreen{
     public MainScreen(StageManager stageManager){
         myStageManager = stageManager;
         this.myStage = stageManager.getStage();
-        setupScreen(this.SIZE,this.SIZE,this.BACKGROUND);
+        setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
     }
 
     @Override
-    protected void setupScreen(int width, int height, Paint background) {
+    protected void setUpScene(int width, int height, Paint background) {
         StackPane root = new StackPane();
         var scene = new Scene(root, width, height, background);
 

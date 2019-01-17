@@ -45,11 +45,11 @@ public class TutorialMode extends GenericScreen{
     public TutorialMode(StageManager stageManager){
         myStageManager = stageManager;
         this.myStage = stageManager.getStage();
-        myScene = setupGame(SIZE,SIZE,BACKGROUND);
+        setUpScene(SIZE,SIZE,BACKGROUND);
     }
 
-
-    private Scene setupGame (int width, int height, Paint background) {
+    @Override
+    protected void setUpScene (int width, int height, Paint background) {
         // create one top level collection to organize the things in the scene
         var root = new Group();
         // create a place to see the shapes
@@ -84,7 +84,7 @@ public class TutorialMode extends GenericScreen{
         // respond to input, the e gives a name to the event that happened so you can get the info
 //        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 //        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
-        return scene;
+        myScene = scene;
     }
 
     public void step (double elapsedTime) {

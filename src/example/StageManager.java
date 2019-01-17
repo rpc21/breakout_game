@@ -17,6 +17,18 @@ public class StageManager {
         return mainScreen;
     }
 
+    public PauseScreen getPauseScreen() {
+        return pauseScreen;
+    }
+
+    public CheatKeyMode getCheatKeyMode() {
+        return cheatKeyMode;
+    }
+
+    public TutorialMode getTutorialMode() {
+        return tutorialMode;
+    }
+
     public StageManager(Stage stage) {
         this.mainScreen = new MainScreen(this);
         this.pauseScreen = new PauseScreen(this);

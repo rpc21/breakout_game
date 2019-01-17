@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -28,12 +29,13 @@ public class CheatKeyMode extends GenericScreen{
     }
 
     public CheatKeyMode(StageManager stageManager) {
-        myScene = setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
+        setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
         this.myStage = stageManager.getStage();
         myStageManager = stageManager;
     }
 
-    private Scene setUpScene(int width, int height, Color background) {
+    @Override
+    protected void setUpScene(int width, int height, Paint background) {
         var root = new StackPane();
         var scene = new Scene(root,width,height,background);
 
@@ -45,7 +47,7 @@ public class CheatKeyMode extends GenericScreen{
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
-        return scene;
+        myScene = scene;
 
     }
 

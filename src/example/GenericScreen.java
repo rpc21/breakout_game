@@ -20,12 +20,12 @@ public class GenericScreen {
     protected Scene myScene;
 
     public GenericScreen(){
-        setupScreen(SIZE,SIZE,BACKGROUND);
+        setUpScene(SIZE,SIZE,BACKGROUND);
         this.myStage = null;
     }
 
     public GenericScreen(Stage stage){
-        setupScreen(SIZE,SIZE,BACKGROUND);
+        setUpScene(SIZE,SIZE,BACKGROUND);
 //        this.myStageManager = stageManager;
         this.myStage = stage;
 
@@ -35,7 +35,7 @@ public class GenericScreen {
         return this.myScene;
     }
 
-    protected void setupScreen(int width, int height, Paint background) {
+    protected void setUpScene(int width, int height, Paint background) {
         var root = new Group();
         var scene = new Scene(root,width,height,background);
         myScene = scene;
