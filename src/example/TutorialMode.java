@@ -31,8 +31,8 @@ public class TutorialMode {
     //    private ImageView myBouncer;
     private List<Bouncer> myBouncers;
 
-    public Group getMyGroupRoot() {
-        return myGroupRoot;
+    public Scene getMyScene() {
+        return myScene;
     }
 
     //    private Rectangle myPaddle;
@@ -42,15 +42,15 @@ public class TutorialMode {
 
 
     public TutorialMode(){
-        myGroupRoot = setupGame(SIZE,SIZE,BACKGROUND);
+        myScene = setupGame(SIZE,SIZE,BACKGROUND);
     }
 
 
-    private Group setupGame (int width, int height, Paint background) {
+    private Scene setupGame (int width, int height, Paint background) {
         // create one top level collection to organize the things in the scene
         var root = new Group();
         // create a place to see the shapes
-//        var scene = new Scene(root, width, height, background);
+        var scene = new Scene(root, width, height, background);
         // make some shapes and set their properties
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
 //        myBouncer = new ImageView(image);
@@ -81,17 +81,17 @@ public class TutorialMode {
         // respond to input, the e gives a name to the event that happened so you can get the info
 //        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 //        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
-        return root;
+        return scene;
     }
 
-    private void step (double elapsedTime) {
+    public void step (double elapsedTime) {
         // update attributes
         boolean highlightGrower = false;
         for(Bouncer bouncer : myBouncers) {
             bouncer.updateBouncer(elapsedTime, myScene);
-            if (myGrower.getBoundsInParent().intersects(bouncer.getBoundsInParent())) {
-                highlightGrower = true;
-            }
+//            if (myGrower.getBoundsInParent().intersects(bouncer.getBoundsInParent())) {
+//                highlightGrower = true;
+//            }
         }
 //        if(highlightGrower){
 //            myGrower.setFill(HIGHLIGHT);

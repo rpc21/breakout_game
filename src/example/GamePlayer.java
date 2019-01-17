@@ -49,6 +49,7 @@ public class GamePlayer extends Application{
     private ArrayList<Button> myButtons;
     private ImageView myPaddle;
     private Text welcomeText;
+    private TutorialMode tutorialMode;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -56,23 +57,22 @@ public class GamePlayer extends Application{
     @Override
     public void start (Stage stage) {
         // attach scene to the stage and display the Start Page
+        tutorialMode = new TutorialMode();
         myScene = setupStartPage(SIZE, SIZE, BACKGROUND);
 
 
         stage.setScene(myScene);
-//        System.out.println(myScene.getRoot());
+        System.out.println(myScene);
         stage.setTitle(TITLE);
         stage.show();
 
 
 
         playTutorialButton.setOnAction(e -> {
-            TutorialMode tutorial = new TutorialMode();
-            myScene.setRoot(tutorial.getMyGroupRoot());
+            myScene = tutorialMode.getMyScene();
             stage.setScene(myScene);
             stage.show();
-//            System.out.println(myScene.getRoot());
-
+            System.out.println(myScene);
         });
 
 
@@ -91,6 +91,12 @@ public class GamePlayer extends Application{
     private void step(double secondDelay) {
         welcomeScreenBackground.setHeight(myScene.getHeight());
         welcomeScreenBackground.setWidth(myScene.getWidth());
+        System.out.println(myScene);
+
+        System.out.println(tutorialMode.getMyScene());
+        if (myScene != null && tutorialMode.getMyScene() != null && myScene == tutorialMode.getMyScene()){
+            tutorialMode.step(secondDelay);
+        }
     }
 
     private Scene setupStartPage(int width, int height, Paint background) {
