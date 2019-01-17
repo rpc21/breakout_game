@@ -39,13 +39,14 @@ public class GamePlayer extends Application{
 //    public static final String WELCOME_PAGE_BACKGROUND = "welcome_page_background.gif";
     public static final String WELCOME_PAGE_BACKGROUND = "ball.gif";
 
-
+    private Stage stage;
     private Scene myScene;
     private ImageView myWelcomeScreen;
     private Rectangle welcomeScreenBackground;
     private Button playGameButton;
     private Button playTutorialButton;
     private Button cheatKeysButton;
+    private ArrayList<Button> myButtons;
     private ImageView myPaddle;
     private Text welcomeText;
 
@@ -56,9 +57,26 @@ public class GamePlayer extends Application{
     public void start (Stage stage) {
         // attach scene to the stage and display the Start Page
         myScene = setupStartPage(SIZE, SIZE, BACKGROUND);
+
+
         stage.setScene(myScene);
+//        System.out.println(myScene.getRoot());
         stage.setTitle(TITLE);
         stage.show();
+
+
+
+        playTutorialButton.setOnAction(e -> {
+            TutorialMode tutorial = new TutorialMode();
+            myScene.setRoot(tutorial.getMyGroupRoot());
+            stage.setScene(myScene);
+            stage.show();
+//            System.out.println(myScene.getRoot());
+
+        });
+
+
+
 
         //attach "game loop" to timeline to play it
         var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
@@ -98,14 +116,24 @@ public class GamePlayer extends Application{
         welcomeText.setFont(Font.font("Palatino", FontWeight.BOLD, 40.0D));
         welcomeText.setTextAlignment(TextAlignment.CENTER);
 
-
+        myButtons = new ArrayList<>();
 
         playGameButton = new Button("Play Game");
         playGameButton.setPrefWidth(100.0D);
+        playGameButton.setOnMouseClicked(e -> handleButtonPressed(playGameButton));
+        myButtons.add(playGameButton);
+
+
         playTutorialButton = new Button("Play Tutorial");
         playTutorialButton.setPrefWidth(100.0D);
+        playTutorialButton.setOnMouseClicked(e -> handleButtonPressed(playGameButton));
+        myButtons.add(playTutorialButton);
+
+
         cheatKeysButton = new Button("Cheat Keys");
         cheatKeysButton.setPrefWidth(100.0D);
+        cheatKeysButton.setOnMouseClicked(e -> handleButtonPressed(playGameButton));
+        myButtons.add(cheatKeysButton);
 
 
 
@@ -127,4 +155,42 @@ public class GamePlayer extends Application{
         return scene;
 
     }
+
+    private void handleButtonPressed(Button pressedButton) {
+        if (pressedButton.equals(playGameButton)){
+            myScene = loadLevelOne(SIZE,SIZE,BACKGROUND);
+        } else if (pressedButton.equals(playTutorialButton)){
+            myScene = loadTutorialMode(SIZE,SIZE,BACKGROUND);
+        } else if (pressedButton.equals(cheatKeysButton)){
+            myScene = loadCheatKeyScreen(SIZE,SIZE,BACKGROUND);
+        }
+    }
+
+    private Scene loadCheatKeyScreen(int width, int height, Paint background) {
+        var root = new Group();
+        var scene = new Scene(root, width, height, background);
+        myScene = scene;
+
+        return scene;
+
+    }
+
+    private Scene loadTutorialMode(int width, int height, Paint background) {
+        var root = new Group();
+        var scene = new Scene(root, width, height, background);
+        myScene = scene;
+        return scene;
+
+    }
+
+    private Scene loadLevelOne(int width, int height, Paint background) {
+        var root = new Group();
+        var scene = new Scene(root, width, height, background);
+        myScene = scene;
+
+        return scene;
+
+    }
+
+
 }
