@@ -50,6 +50,8 @@ public class GamePlayer extends Application{
     private ImageView myPaddle;
     private Text welcomeText;
     private TutorialMode tutorialMode;
+//    private GamePlayMode gamePlayMode;
+    private CheatKeyMode cheatKeyMode;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -58,6 +60,8 @@ public class GamePlayer extends Application{
     public void start (Stage stage) {
         // attach scene to the stage and display the Start Page
         tutorialMode = new TutorialMode();
+        cheatKeyMode = new CheatKeyMode();
+
         myScene = setupStartPage(SIZE, SIZE, BACKGROUND);
 
 
@@ -70,6 +74,13 @@ public class GamePlayer extends Application{
 
         playTutorialButton.setOnAction(e -> {
             myScene = tutorialMode.getMyScene();
+            stage.setScene(myScene);
+            stage.show();
+            System.out.println(myScene);
+        });
+
+        cheatKeysButton.setOnAction(e -> {
+            myScene = cheatKeyMode.getMyScene();
             stage.setScene(myScene);
             stage.show();
             System.out.println(myScene);
