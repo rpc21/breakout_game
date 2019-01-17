@@ -16,10 +16,7 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 
-public class MainScreen {
-    private final int SIZE = 500;
-    public static final String PADDLE_IMAGE = "paddle.gif";
-    public static final Paint BACKGROUND = Color.AZURE;
+public class MainScreen extends GenericScreen{
 
     private Rectangle welcomeScreenBackground;
     private Button playGameButton;
@@ -28,14 +25,9 @@ public class MainScreen {
     private ArrayList<Button> myButtons;
     private ImageView myPaddle;
     private Text welcomeText;
-    private Scene myScene;
 
-
-    public Scene getMyScene() {
-        return setupStartPage(SIZE,SIZE,BACKGROUND);
-    }
-
-    private Scene setupStartPage(int width, int height, Paint background) {
+    @Override
+    protected void setupScreen(int width, int height, Paint background) {
         StackPane root = new StackPane();
         var scene = new Scene(root, width, height, background);
 
@@ -91,11 +83,10 @@ public class MainScreen {
         root.getChildren().add(welcomeScreenBackground);
         root.getChildren().add(vBox);
 
-
-
-        return scene;
+        myScene = scene;
 
     }
+
 
 //    private void handleButtonPressed(Button pressedButton) {
 //        if (pressedButton.equals(playGameButton)){

@@ -24,6 +24,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GamePlayer extends Application{
     public static final String TITLE = "Ryan Culhane Game";
@@ -32,12 +33,9 @@ public class GamePlayer extends Application{
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final Paint BACKGROUND = Color.AZURE;
-    public static final Paint HIGHLIGHT = Color.OLIVEDRAB;
     public static final String BOUNCER_IMAGE = "ball.gif";
     public static final int BOUNCER_SPEED = 40;
     public static final String PADDLE_IMAGE = "paddle.gif";
-//    public static final String WELCOME_PAGE_BACKGROUND = "welcome_page_background.gif";
-    public static final String WELCOME_PAGE_BACKGROUND = "ball.gif";
 
     private Stage stage;
     private Scene myScene;
@@ -50,9 +48,11 @@ public class GamePlayer extends Application{
     private ImageView myPaddle;
     private Text welcomeText;
     private TutorialMode tutorialMode;
+    private PauseScreen pauseScreen;
 //    private GamePlayMode gamePlayMode;
     private CheatKeyMode cheatKeyMode;
     private MainScreen mainScreen;
+    private StageManager stageManager;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -63,12 +63,18 @@ public class GamePlayer extends Application{
         tutorialMode = new TutorialMode();
         cheatKeyMode = new CheatKeyMode();
         mainScreen = new MainScreen();
+        pauseScreen = new PauseScreen();
 
-        myScene = mainScreen.getMyScene();
+        stageManager = new StageManager(mainScreen, pauseScreen, cheatKeyMode, tutorialMode, stage);
+        stageManager.switchScene(mainScreen);
 
-        stage.setScene(myScene);
-        stage.setTitle(TITLE);
-        stage.show();
+        stageManager.switchScene(pauseScreen);
+
+//        myScene = mainScreen.getMyScene();
+//
+//        stage.setScene(myScene);
+//        stage.setTitle(TITLE);
+//        stage.show();
 
 //        myScene = setupStartPage(SIZE, SIZE, BACKGROUND);
 
