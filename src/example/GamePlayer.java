@@ -52,6 +52,7 @@ public class GamePlayer extends Application{
     private TutorialMode tutorialMode;
 //    private GamePlayMode gamePlayMode;
     private CheatKeyMode cheatKeyMode;
+    private MainScreen mainScreen;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -61,48 +62,55 @@ public class GamePlayer extends Application{
         // attach scene to the stage and display the Start Page
         tutorialMode = new TutorialMode();
         cheatKeyMode = new CheatKeyMode();
+        mainScreen = new MainScreen();
 
-        myScene = setupStartPage(SIZE, SIZE, BACKGROUND);
-
+        myScene = mainScreen.getMyScene();
 
         stage.setScene(myScene);
-        System.out.println(myScene);
         stage.setTitle(TITLE);
         stage.show();
 
+//        myScene = setupStartPage(SIZE, SIZE, BACKGROUND);
 
 
-        playTutorialButton.setOnAction(e -> {
-            myScene = tutorialMode.getMyScene();
-            stage.setScene(myScene);
-            stage.show();
-            System.out.println(myScene);
-        });
+//        stage.setScene(myScene);
+//        System.out.println(myScene);
+//        stage.setTitle(TITLE);
+//        stage.show();
 
-        cheatKeysButton.setOnAction(e -> {
-            myScene = cheatKeyMode.getMyScene();
-            stage.setScene(myScene);
-            stage.show();
-            System.out.println(myScene);
-        });
+
+
+//        playTutorialButton.setOnAction(e -> {
+//            myScene = tutorialMode.getMyScene();
+//            stage.setScene(myScene);
+//            stage.show();
+//            System.out.println(myScene);
+//        });
+//
+//        cheatKeysButton.setOnAction(e -> {
+//            myScene = cheatKeyMode.getMyScene();
+//            stage.setScene(myScene);
+//            stage.show();
+//            System.out.println(myScene);
+//        });
 
 
 
 
         //attach "game loop" to timeline to play it
-        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-        var animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
-        animation.play();
+//        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
+//        var animation = new Timeline();
+//        animation.setCycleCount(Timeline.INDEFINITE);
+//        animation.getKeyFrames().add(frame);
+//        animation.play();
 
 
     }
 
     private void step(double secondDelay) {
-        welcomeScreenBackground.setHeight(myScene.getHeight());
-        welcomeScreenBackground.setWidth(myScene.getWidth());
-        System.out.println(myScene);
+//        welcomeScreenBackground.setHeight(myScene.getHeight());
+//        welcomeScreenBackground.setWidth(myScene.getWidth());
+//        System.out.println(myScene);
 
         System.out.println(tutorialMode.getMyScene());
         if (myScene != null && tutorialMode.getMyScene() != null && myScene == tutorialMode.getMyScene()){
