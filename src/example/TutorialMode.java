@@ -8,11 +8,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TutorialMode {
+public class TutorialMode extends GenericScreen{
     public static final String TITLE = "Ryan Culhane Game";
     public static final int SIZE = 500;
     public static final int FRAMES_PER_SECOND = 60;
@@ -41,7 +42,9 @@ public class TutorialMode {
 
 
 
-    public TutorialMode(){
+    public TutorialMode(StageManager stageManager){
+        myStageManager = stageManager;
+        this.myStage = stageManager.getStage();
         myScene = setupGame(SIZE,SIZE,BACKGROUND);
     }
 

@@ -13,14 +13,17 @@ public class StageManager {
     private Stage stage;
     private GenericScreen currentScreen;
 
-    public StageManager(MainScreen mainScreen, PauseScreen pauseScreen, CheatKeyMode cheatKeyMode,
-                        TutorialMode tutorialMode, Stage stage) {
-        this.mainScreen = mainScreen;
-        this.pauseScreen = pauseScreen;
-        this.cheatKeyMode = cheatKeyMode;
-        this.tutorialMode = tutorialMode;
+    public MainScreen getMainScreen() {
+        return mainScreen;
+    }
+
+    public StageManager(Stage stage) {
+        this.mainScreen = new MainScreen(this);
+        this.pauseScreen = new PauseScreen(this);
+        this.cheatKeyMode = new CheatKeyMode(this);
+        this.tutorialMode = new TutorialMode(this);
         this.stage = stage;
-        this.currentScreen = mainScreen;
+        this.currentScreen = new GenericScreen();
         stage.setScene(currentScreen.getMyScene());
     }
 
@@ -33,5 +36,9 @@ public class StageManager {
 
     public GenericScreen getCurrentScreen() {
         return currentScreen;
+    }
+
+    public Stage getStage(){
+        return stage;
     }
 }

@@ -4,8 +4,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
-public abstract class GenericScreen {
+public class GenericScreen {
 
     protected final String TITLE = "Ryan Culhane Game";
     protected final int SIZE = 500;
@@ -14,11 +15,24 @@ public abstract class GenericScreen {
     protected final int BOUNCER_SPEED = 40;
     protected final String PADDLE_IMAGE = "paddle.gif";
 
+    protected StageManager myStageManager;
+    protected Stage myStage;
     protected Scene myScene;
 
-    public Scene getMyScene() {
+    public GenericScreen(){
         setupScreen(SIZE,SIZE,BACKGROUND);
-        return myScene;
+        this.myStage = null;
+    }
+
+    public GenericScreen(Stage stage){
+        setupScreen(SIZE,SIZE,BACKGROUND);
+//        this.myStageManager = stageManager;
+        this.myStage = stage;
+
+    }
+
+    public Scene getMyScene() {
+        return this.myScene;
     }
 
     protected void setupScreen(int width, int height, Paint background) {

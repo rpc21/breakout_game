@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,15 @@ public class MainScreen extends GenericScreen{
     private ArrayList<Button> myButtons;
     private ImageView myPaddle;
     private Text welcomeText;
+
+
+
+
+    public MainScreen(StageManager stageManager){
+        myStageManager = stageManager;
+        this.myStage = stageManager.getStage();
+        setupScreen(this.SIZE,this.SIZE,this.BACKGROUND);
+    }
 
     @Override
     protected void setupScreen(int width, int height, Paint background) {
@@ -52,20 +62,23 @@ public class MainScreen extends GenericScreen{
         myButtons = new ArrayList<>();
 
         playGameButton = new Button("Play Game");
-        playGameButton.setPrefWidth(100.0D);
-//        playGameButton.setOnMouseClicked(e -> handleButtonPressed(playGameButton));
+        playGameButton.setOnAction(e -> {
+            myStageManager.switchScene(new PauseScreen(myStageManager));
+        });
         myButtons.add(playGameButton);
 
 
         playTutorialButton = new Button("Play Tutorial");
-        playTutorialButton.setPrefWidth(100.0D);
-//        playTutorialButton.setOnMouseClicked(e -> handleButtonPressed(playGameButton));
+        playTutorialButton.setOnAction(e -> {
+            myStageManager.switchScene(new TutorialMode(myStageManager));
+        });
         myButtons.add(playTutorialButton);
 
 
         cheatKeysButton = new Button("Cheat Keys");
-        cheatKeysButton.setPrefWidth(100.0D);
-//        cheatKeysButton.setOnMouseClicked(e -> handleButtonPressed(playGameButton));
+        cheatKeysButton.setOnAction(e -> {
+            myStageManager.switchScene(new CheatKeyMode(myStageManager));
+        });
         myButtons.add(cheatKeysButton);
 
 

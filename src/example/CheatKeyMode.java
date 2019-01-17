@@ -7,8 +7,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public class CheatKeyMode {
+public class CheatKeyMode extends GenericScreen{
 
     private final int SIZE = 500;
     private final Color BACKGROUND = Color.AZURE;
@@ -26,8 +27,10 @@ public class CheatKeyMode {
         return myScene;
     }
 
-    public CheatKeyMode() {
-        myScene = setUpScene(SIZE, SIZE, BACKGROUND);
+    public CheatKeyMode(StageManager stageManager) {
+        myScene = setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
+        this.myStage = stageManager.getStage();
+        myStageManager = stageManager;
     }
 
     private Scene setUpScene(int width, int height, Color background) {

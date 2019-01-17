@@ -60,15 +60,18 @@ public class GamePlayer extends Application{
     @Override
     public void start (Stage stage) {
         // attach scene to the stage and display the Start Page
-        tutorialMode = new TutorialMode();
-        cheatKeyMode = new CheatKeyMode();
-        mainScreen = new MainScreen();
-        pauseScreen = new PauseScreen();
 
-        stageManager = new StageManager(mainScreen, pauseScreen, cheatKeyMode, tutorialMode, stage);
-        stageManager.switchScene(mainScreen);
+        this.stage = stage;
+        stageManager = new StageManager(stage);
 
-        stageManager.switchScene(pauseScreen);
+//        tutorialMode = new TutorialMode(stageManager);
+//        cheatKeyMode = new CheatKeyMode(stage);
+//        mainScreen = new MainScreen(stage);
+//        pauseScreen = new PauseScreen(stage);
+
+        stageManager.switchScene(stageManager.getMainScreen());
+
+//        stageManager.switchScene(pauseScreen);
 
 //        myScene = mainScreen.getMyScene();
 //
@@ -104,11 +107,11 @@ public class GamePlayer extends Application{
 
 
         //attach "game loop" to timeline to play it
-//        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-//        var animation = new Timeline();
-//        animation.setCycleCount(Timeline.INDEFINITE);
-//        animation.getKeyFrames().add(frame);
-//        animation.play();
+        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
+        var animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        animation.play();
 
 
     }
@@ -118,10 +121,15 @@ public class GamePlayer extends Application{
 //        welcomeScreenBackground.setWidth(myScene.getWidth());
 //        System.out.println(myScene);
 
-        System.out.println(tutorialMode.getMyScene());
-        if (myScene != null && tutorialMode.getMyScene() != null && myScene == tutorialMode.getMyScene()){
-            tutorialMode.step(secondDelay);
-        }
+//        System.out.println(tutorialMode.getMyScene());
+//        if (myScene != null && tutorialMode.getMyScene() != null && myScene == tutorialMode.getMyScene()){
+//            tutorialMode.step(secondDelay);
+//        }
+        stageManager.getCurrentScreen().step(secondDelay);
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     private Scene setupStartPage(int width, int height, Paint background) {
