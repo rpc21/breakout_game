@@ -62,7 +62,7 @@ public class TutorialMode extends GenericScreen{
         // x and y represent the top left corner, so center it
         myBouncers = new ArrayList<>();
         for(int i = 0; i<10; i++){
-            Bouncer bouncer = new Bouncer(image);
+            Bouncer bouncer = new Bouncer(image, new GameDifficulty(GameDifficulty.BEGINNING_MODE));
             myBouncers.add(bouncer);
             root.getChildren().add(bouncer);
         }
@@ -73,14 +73,14 @@ public class TutorialMode extends GenericScreen{
         myScene = scene;
     }
 
-    @Override
-    protected void step (double elapsedTime) {
-        // update attributes
-        for(Bouncer bouncer : myBouncers) {
-            bouncer.updateBouncer(elapsedTime, myScene);
-
-        }
-    }
+//    @Override
+//    protected void step (double elapsedTime) {
+//        // update attributes
+//        for(Bouncer bouncer : myBouncers) {
+//            bouncer.updateBouncer(elapsedTime, myScene);
+//
+//        }
+//    }
 
     @Override
     protected void handleKeyInput(KeyCode code) {

@@ -13,22 +13,14 @@ public class Bouncer extends ImageView {
     private int myXSpeed;
     private int myYSpeed;
     private int mySpeed;
+    private GameDifficulty myCurrentMode;
 
 
-    public Bouncer(Image image, int currentMode) {
+    public Bouncer(Image image, GameDifficulty currentMode) {
         super(image);
-        if (currentMode == GameLevel.INTERMEDIATE_MODE){
-            myXSpeed = INTERMEDIATE_MODE_MAX_X_SPEED / 2;
-            myYSpeed = INTERMEDIATE_MODE_Y_SPEED / 2;
-        }
-        else if (currentMode == GameLevel.ADVANCED_MODE){
-            myXSpeed = ADVANCED_MODE_MAX_X_SPEED / 2;
-            myYSpeed = ADVANCED_MODE_Y_SPEED / 2;
-        }
-        else {
-            myXSpeed = BEGINNING_MODE_MAX_X_SPEED / 2;
-            myYSpeed = BEGINNING_MODE_Y_SPEED / 2;
-        }
+        myCurrentMode = currentMode;
+        myXSpeed = myCurrentMode.getMaxBouncerXSpeed() / 2;
+        myYSpeed = myCurrentMode.getBouncerYSpeed();
     }
 
     public void updateBouncer(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks){
@@ -37,7 +29,6 @@ public class Bouncer extends ImageView {
         handlePaddleCollisions(paddle);
         handleBrickCollisions(bricks);
 
-
     }
 
     private void handleBrickCollisions(ArrayList<GenericBrick> bricks) {
@@ -45,12 +36,22 @@ public class Bouncer extends ImageView {
 
     private void handlePaddleCollisions(Paddle paddle) {
         if (collisionBetween(this, paddle)){
-            this.myXSpeed += paddle.getMyVelocity() / 10;
+            this.myXSpeed += paddle.getMyVelocity() / 2;
+            this.myYSpeed *= -1;
         }
-        if (myXSpeed > )
+        if (myXSpeed > myCurrentMode.getMaxBouncerXSpeed()){
+            myXSpeed = myCurrentMode.getMaxBouncerXSpeed();
+        }
+        if (myXSpeed < myCurrentMode.getMinBouncerXSpeed()){
+            myXSpeed = myCurrentMode.getMinBouncerXSpeed();
+        }
     }
 
     private boolean collisionBetween(ImageView bouncer, ImageView otherObject) {
+        return (bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
+                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() &&
+                bouncer.getY() + bouncer.getBoundsInParent().getHeight() <= otherObject.getY() + 1 &&
+                bouncer.getY() + bouncer.getBoundsInParent().getHeight() >= otherObject.getY() - 1);
     }
 
     private void updatePosition(double elapsedTime) {
@@ -59,11 +60,11 @@ public class Bouncer extends ImageView {
     }
 
     private void handleWallCollisions(Scene scene) {
-        if (this.getX() <= 0 || this.getX() >= scene.getWidth()) {
-            myXDirection *= -1;
+        if (this.getX() <= 0 || this.getX() + this.getBoundsInLocal().getWidth() >= scene.getWidth()) {
+            this.myXSpeed *= -1;
         }
-        if (this.getY() <= 0 || this.getY() >= scene.getHeight()) {
-            myYDirection *= -1;
+        if (this.getY() <= 0 || this.getY() + this.getBoundsInLocal().getHeight() >= scene.getHeight()) {
+            this.myYSpeed *= -1;
         }
     }
 

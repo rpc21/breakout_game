@@ -7,9 +7,9 @@ import javafx.scene.image.ImageView;
 public class Paddle extends ImageView {
 
 
-    public static final int MAX_PADDLE_VELOCITY = 90;
+    public static final int MAX_PADDLE_VELOCITY = 120;
     public static final int PADDLE_ACCELERATION = 30;
-    public static final int MIN_PADDLE_VELOCITY = -90;
+    public static final int MIN_PADDLE_VELOCITY = -120;
     private int myVelocity;
 
     public int getMyVelocity() {

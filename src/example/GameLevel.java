@@ -11,9 +11,6 @@ import java.util.ArrayList;
 
 public class GameLevel extends GenericScreen{
 
-    public static final int BEGINNING_MODE = 13789;
-    public static final int INTERMEDIATE_MODE = 13790;
-    public static final int ADVANCED_MODE = 13791;
     public static final String BOUNCER_IMAGE = "ball.gif";
     public static final String PADDLE_IMAGE = "paddle.gif";
     public static final Paint BACKGROUND = Color.AZURE;
@@ -26,7 +23,7 @@ public class GameLevel extends GenericScreen{
     private int levelNumber;
     private String bricksSpecificationFile;
     private int timeRemaining;
-    private int currentMode;
+    private GameDifficulty currentMode;
     private Bouncer myBouncer;
     private Paddle myPaddle;
     private StageManager myStageManager;
@@ -41,7 +38,7 @@ public class GameLevel extends GenericScreen{
     public GameLevel(StageManager stageManager){
         myStageManager = stageManager;
         System.out.println(myStageManager + "is the stageManager in GameLevel");
-        currentMode = BEGINNING_MODE;
+        currentMode = new GameDifficulty(GameDifficulty.ADVANCED_MODE);
         setUpLevel();
     }
 
