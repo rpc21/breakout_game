@@ -2,6 +2,7 @@ package example;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -24,10 +25,10 @@ public class GenericScreen {
         this.myStage = null;
     }
 
-    public GenericScreen(Stage stage){
+    public GenericScreen(StageManager stageManager){
+        this.myStageManager = stageManager;
+        this.myStage = myStageManager.getStage();
         setUpScene(SIZE,SIZE,BACKGROUND);
-//        this.myStageManager = stageManager;
-        this.myStage = stage;
 
     }
 
@@ -41,5 +42,12 @@ public class GenericScreen {
         myScene = scene;
     }
 
+    protected void handleKeyInput(KeyCode code) {
+        if (code == KeyCode.BACK_SPACE){
+            myStageManager.switchScene(myStageManager.getMainScreen());
+        }
+    }
+
     protected void step(double elapsedTime){}
+
 }

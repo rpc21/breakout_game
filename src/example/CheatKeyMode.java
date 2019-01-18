@@ -13,13 +13,14 @@ import javafx.stage.Stage;
 public class CheatKeyMode extends GenericScreen{
 
     private final int SIZE = 500;
-    private final Color BACKGROUND = Color.AZURE;
+    private final Paint BACKGROUND = Color.AZURE;
     private final String CHEAT_KEY_DESCRIPTIONS = "'L' - add another life\n" +
                                                     "'R' - reset the level\n" +
                                                     "'T' - give infinite time\n" +
                                                     "'D' - Destroy any block by clicking on it\n" +
                                                     "# keys - Jump to level of that number\n" +
-                                                    "'P' - gain access to all power ups";
+                                                    "'P' - gain access to all power ups\n"+
+                                                    "BACKSPACE always will return to the start menu";
 
 
     private Scene myScene;
@@ -29,15 +30,14 @@ public class CheatKeyMode extends GenericScreen{
     }
 
     public CheatKeyMode(StageManager stageManager) {
-        setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
-        this.myStage = stageManager.getStage();
-        myStageManager = stageManager;
+        super(stageManager);
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     }
 
     @Override
     protected void setUpScene(int width, int height, Paint background) {
         var root = new StackPane();
-        var scene = new Scene(root,width,height,background);
+        var scene = new Scene(root,width,height,BACKGROUND);
 
         VBox vBox = new VBox(SIZE/40.0);
         vBox.getChildren().add(new Text(CHEAT_KEY_DESCRIPTIONS));
@@ -45,15 +45,12 @@ public class CheatKeyMode extends GenericScreen{
 
         root.getChildren().add(vBox);
 
-        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-
         myScene = scene;
 
     }
 
-    private void handleKeyInput(KeyCode code) {
-        if(code == KeyCode.BACK_SPACE){
-
-        }
+    @Override
+    protected void handleKeyInput(KeyCode code) {
+        super.handleKeyInput(code);
     }
 }

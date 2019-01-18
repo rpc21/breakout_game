@@ -6,9 +6,8 @@ import javafx.stage.Stage;
 public class PauseScreen extends GenericScreen {
 
     public PauseScreen(StageManager stageManager){
-        myStageManager = stageManager;
-        setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
-        this.myStage = stageManager.getStage();
+        super(stageManager);
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     }
 
     @Override

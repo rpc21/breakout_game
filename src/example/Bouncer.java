@@ -5,9 +5,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Bouncer extends ImageView {
+    private static final String BOUNCER_IMAGE = "ball.gif";
     private int myXDirection;
     private int myYDirection;
     private int mySpeed;
+
 
     public Bouncer(Image image) {
         super(image);

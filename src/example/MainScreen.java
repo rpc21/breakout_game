@@ -34,9 +34,7 @@ public class MainScreen extends GenericScreen{
 
 
     public MainScreen(StageManager stageManager){
-        myStageManager = stageManager;
-        this.myStage = stageManager.getStage();
-        setUpScene(this.SIZE,this.SIZE,this.BACKGROUND);
+        super(stageManager);
     }
 
     @Override
@@ -116,6 +114,13 @@ public class MainScreen extends GenericScreen{
         myButtons.add(cheatKeysButton);
     }
 
+    @Override
+    protected void step(double elapsedTime) {
+        resizeWindow();
+    }
 
-
+    private void resizeWindow() {
+        welcomeScreenBackground.setWidth(myScene.getWidth());
+        welcomeScreenBackground.setHeight(myScene.getHeight());
+    }
 }

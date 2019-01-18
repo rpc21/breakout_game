@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -43,9 +44,8 @@ public class TutorialMode extends GenericScreen{
 
 
     public TutorialMode(StageManager stageManager){
-        myStageManager = stageManager;
-        this.myStage = stageManager.getStage();
-        setUpScene(SIZE,SIZE,BACKGROUND);
+        super(stageManager);
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     }
 
     @Override
@@ -60,65 +60,29 @@ public class TutorialMode extends GenericScreen{
         var paddle = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
         myPaddle = new ImageView(paddle);
         // x and y represent the top left corner, so center it
-//        myBouncer.setX(width / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
-//        myBouncer.setY(height / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
         myBouncers = new ArrayList<>();
         for(int i = 0; i<10; i++){
             Bouncer bouncer = new Bouncer(image);
-//            bouncer.setX((int) (Math.random() * scene.getWidth()));
-//            bouncer.setY((int) (Math.random() * scene.getHeight()));
             myBouncers.add(bouncer);
             root.getChildren().add(bouncer);
         }
-//        myPaddle = new Rectangle(width / 2 - 25, height / 2 - 100, MOVER_SIZE, MOVER_SIZE);
-//        myPaddle.setFill(MOVER_COLOR);
-//        myGrower = new Rectangle(width / 2 - 25, height / 2 + 50, GROWER_SIZE, GROWER_SIZE);
-//        myGrower.setFill(GROWER_COLOR);
-        // order added to the group is the order in which they are drawn
-//        root.getChildren().add(myBouncers);
         myPaddle.setX(SIZE/2);
         myPaddle.setY(SIZE-50);
-//        root.getChildren().add(myPaddle);
-//        root.getChildren().add(myGrower);
         root.getChildren().add(myPaddle);
-        // respond to input, the e gives a name to the event that happened so you can get the info
-//        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-//        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+
         myScene = scene;
     }
 
     public void step (double elapsedTime) {
         // update attributes
-        boolean highlightGrower = false;
         for(Bouncer bouncer : myBouncers) {
             bouncer.updateBouncer(elapsedTime, myScene);
-//            if (myGrower.getBoundsInParent().intersects(bouncer.getBoundsInParent())) {
-//                highlightGrower = true;
-//            }
-        }
-//        if(highlightGrower){
-//            myGrower.setFill(HIGHLIGHT);
-//        }
-//        else{
-//            myGrower.setFill(GROWER_COLOR);
-//        }
-//        myPaddle.setRotate(myPaddle.getRotate() - 1);
 
-        // check for collisions
-        // with shapes, can check precisely
-//        var intersect = Shape.intersect(myPaddle, myGrower);
-//        if (intersect.getBoundsInLocal().getWidth() != -1) {
-//            myPaddle.setFill(HIGHLIGHT);
-//        }
-//        else {
-//            myPaddle.setFill(MOVER_COLOR);
-//        }
-        // with images can only check bounding box
-//        if (myGrower.getBoundsInParent().intersects(myBouncer.getBoundsInParent())) {
-//            myGrower.setFill(HIGHLIGHT);
-//        }
-//        else {
-//            myGrower.setFill(GROWER_COLOR);
-//        }
+        }
+    }
+
+    @Override
+    protected void handleKeyInput(KeyCode code) {
+        super.handleKeyInput(code);
     }
 }
