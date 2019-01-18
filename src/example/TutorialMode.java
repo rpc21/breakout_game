@@ -73,7 +73,8 @@ public class TutorialMode extends GenericScreen{
         myScene = scene;
     }
 
-    public void step (double elapsedTime) {
+    @Override
+    protected void step (double elapsedTime) {
         // update attributes
         for(Bouncer bouncer : myBouncers) {
             bouncer.updateBouncer(elapsedTime, myScene);

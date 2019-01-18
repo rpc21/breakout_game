@@ -44,6 +44,7 @@ public class GenericScreen {
 
     protected void handleKeyInput(KeyCode code) {
         if (code == KeyCode.BACK_SPACE){
+            System.out.println(myStageManager+"is the stageManager on line 47");
             myStageManager.switchScene(myStageManager.getMainScreen());
         }
     }
