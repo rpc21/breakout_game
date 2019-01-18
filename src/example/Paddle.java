@@ -6,7 +6,15 @@ import javafx.scene.image.ImageView;
 
 public class Paddle extends ImageView {
 
+
+    public static final int MAX_PADDLE_VELOCITY = 90;
+    public static final int PADDLE_ACCELERATION = 30;
+    public static final int MIN_PADDLE_VELOCITY = -90;
     private int myVelocity;
+
+    public int getMyVelocity() {
+        return myVelocity;
+    }
 
     public Paddle(Image image){
         super(image);
@@ -14,21 +22,25 @@ public class Paddle extends ImageView {
     }
 
     public void increaseVelocity(){
-        if (myVelocity < 60){
-            myVelocity += 20;
+        if (myVelocity < MAX_PADDLE_VELOCITY){
+            myVelocity += PADDLE_ACCELERATION;
         }
 
     }
 
     public void decreaseVelocity(){
-        if (myVelocity > -60){
-            myVelocity -= 20;
+        if (myVelocity > MIN_PADDLE_VELOCITY){
+            myVelocity -= PADDLE_ACCELERATION;
         }
     }
 
-    public void updatePaddlePosition(Scene scene){
-//        if(this.getX() > scene.getWidth()){
-//            setX(this.getX() % );
-//        }
+    public void updatePaddlePosition(double elapsedTime, Scene scene){
+        setX(this.getX() + myVelocity * elapsedTime);
+        if(this.getX() > scene.getWidth()){
+            setX(this.getX() % scene.getWidth());
+        }
+        else if(this.getX() < 0){
+            setX(this.getX() + scene.getWidth());
+        }
     }
 }

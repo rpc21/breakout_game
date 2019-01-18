@@ -86,7 +86,7 @@ public class GameLevel extends GenericScreen{
     protected void initializeBouncer(Scene scene){
         System.out.println("Raeched initialize Bouncer");
         var bouncerImage = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
-        myBouncer = new Bouncer(bouncerImage);
+        myBouncer = new Bouncer(bouncerImage, currentMode);
         myBouncer.setX(scene.getWidth() / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
         myBouncer.setY(scene.getHeight() / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
     }
@@ -102,8 +102,8 @@ public class GameLevel extends GenericScreen{
     @Override
     protected void step (double elapsedTime) {
         // update attributes
-        myPaddle.updatePaddle(elapsedTime,myScene);
-        myBouncer.updateBouncer(elapsedTime,myScene);
+        myPaddle.updatePaddlePosition(elapsedTime,myScene);
+        myBouncer.updateBouncer(elapsedTime,myScene, myPaddle, myBricks);
 
     }
 
