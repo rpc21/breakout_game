@@ -3,19 +3,18 @@ package example;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
-public class GameLevel {
+public class GameLevel extends GenericScreen{
 
     public static final int BEGINNING_MODE = 13789;
     public static final int INTERMEDIATE_MODE = 13790;
     public static final int ADVANCED_MODE = 13791;
     public static final String BOUNCER_IMAGE = "ball.gif";
+    public static final String PADDLE_IMAGE = "paddle.gif";
     public static final Paint BACKGROUND = Color.AZURE;
     public static final int SIZE = 500;
 
@@ -31,7 +30,7 @@ public class GameLevel {
     private Paddle myPaddle;
     private StageManager myStageManager;
     private Scene myScene;
-    private ArrayList<Brick> myBricks;
+    private ArrayList<GenericBrick> myBricks;
 
     public GameLevel(StageManager stageManager){
         myStageManager = stageManager;
@@ -39,37 +38,45 @@ public class GameLevel {
         setUpLevel();
     }
 
-    private void setUpLevel() {
+    protected void setUpLevel() {
         // create one top level collection to organize the things in the scene
         var root = new Group();
         // create a place to see the shapes
         var scene = new Scene(root, SIZE, SIZE, BACKGROUND);
-        // make some shapes and set their properties
-        var image = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
 
+        generateBricks();
 
-        myBouncer = initializeBouncer();
-        myPaddle = initializePaddle();
+        initializeBouncer();
+        initializePaddle();
 
         root.getChildren().add(myBouncer);
         root.getChildren().add(myPaddle);
-        myBouncer = new Bouncer(image);
-        // x and y represent the top left corner, so center it
-        myBouncer.setX(scene.getWidth()/ 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
-        myBouncer.setY(scene.getHeight() / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
+        root.getChildren().addAll(myBricks);
 
 
-        // order added to the group is the order in which they are drawn
-//        root.getChildren().add(myBouncers);
-
-//        root.getChildren().add(myPaddle);
-//        root.getChildren().add(myGrower);
-        root.getChildren().add(myPaddle);
         // respond to input, the e gives a name to the event that happened so you can get the info
-        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
-        return scene;
+//        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+//        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+        myScene = scene;
 
+    }
+
+    protected void generateBricks() {
+        myBricks = new ArrayList<>();
+    }
+
+    protected void initializeBouncer(){
+        var bouncerImage = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
+        myBouncer = new Bouncer(bouncerImage);
+        myBouncer.setX(myScene.getWidth()/ 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
+        myBouncer.setY(myScene.getHeight() / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
+    }
+
+    protected void initializePaddle(){
+        var paddleImage = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
+        myPaddle = new Paddle(paddleImage);
+        myPaddle.setX(myScene.getWidth() / 2 - myPaddle.getBoundsInLocal().getWidth() / 2);
+        myPaddle.setY(myScene.getHeight() * 0.9);
     }
 
 

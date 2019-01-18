@@ -12,6 +12,11 @@ public class StageManager {
     private TutorialMode tutorialMode;
     private Stage stage;
     private GenericScreen currentScreen;
+    private GameLevel gameLevel;
+
+    public GameLevel getGameLevel() {
+        return gameLevel;
+    }
 
     public MainScreen getMainScreen() {
         return mainScreen;
@@ -34,6 +39,7 @@ public class StageManager {
         this.pauseScreen = new PauseScreen(this);
         this.cheatKeyMode = new CheatKeyMode(this);
         this.tutorialMode = new TutorialMode(this);
+        this.gameLevel = new GameLevel(this);
         this.stage = stage;
         this.currentScreen = new GenericScreen();
         stage.setScene(currentScreen.getMyScene());
