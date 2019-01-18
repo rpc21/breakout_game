@@ -1,6 +1,7 @@
 package example;
 
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class MainScreen extends GenericScreen{
 
+    public static final double SIZE_TO_VBOX_PADDING_RATIO = 40.0;
     private Rectangle welcomeScreenBackground;
     private Button playGameButton;
     private Button playTutorialButton;
@@ -26,6 +28,7 @@ public class MainScreen extends GenericScreen{
     private ArrayList<Button> myButtons;
     private ImageView myPaddle;
     private Text welcomeText;
+    private VBox myVBox;
 
 
 
@@ -41,26 +44,57 @@ public class MainScreen extends GenericScreen{
         StackPane root = new StackPane();
         var scene = new Scene(root, width, height, background);
 
+        initializeWelcomeScreenBackground();
+        initializePaddle();
+        initializeWelcomeText();
 
-//        https://docs.oracle.com/javafx/2/layout/builtin_layouts.htm
-        welcomeScreenBackground = new Rectangle(width, height);
+        createButtons();
+
+        addSceneElementsToVBox();
+
+        root.getChildren().add(welcomeScreenBackground);
+        root.getChildren().add(myVBox);
+
+        myScene = scene;
+
+    }
+
+    private void addSceneElementsToVBox() {
+        myVBox = new VBox(SIZE / SIZE_TO_VBOX_PADDING_RATIO);
+        myVBox.getChildren().addAll(new Text(""),new Text(""), new Text(""));
+        myVBox.getChildren().add(myPaddle);
+        myVBox.getChildren().add(new Text(""));
+        myVBox.getChildren().add(welcomeText);
+        myVBox.getChildren().add(new Text(""));
+        myVBox.getChildren().addAll(myButtons);
+        myVBox.setAlignment(Pos.CENTER);
+        myVBox.getChildren().add(new Text(""));
+    }
+
+    private void initializeWelcomeText() {
+        welcomeText = new Text("Welcome to Breakout");
+        welcomeText.setFont(Font.font("Palatino", FontWeight.BOLD, 40.0D));
+        welcomeText.setTextAlignment(TextAlignment.CENTER);
+    }
+
+    private void initializePaddle() {
+        var paddle = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
+        myPaddle = new ImageView(paddle);
+    }
+
+    private void initializeWelcomeScreenBackground() {
+        //        https://docs.oracle.com/javafx/2/layout/builtin_layouts.htm
+        welcomeScreenBackground = new Rectangle(SIZE, SIZE);
         welcomeScreenBackground.setFill(new LinearGradient(0,0,0,1, true, CycleMethod.NO_CYCLE,
                 new Stop[]{
                         new Stop(0, Color.web("#4977A3")),
                         new Stop(0.5, Color.web("#B0C6DA")),
                         new Stop(1,Color.web("#9CB6CF")),}));
         welcomeScreenBackground.setStroke(Color.web("#D0E6FA"));
+    }
 
-        var paddle = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
-        myPaddle = new ImageView(paddle);
-
-
-        welcomeText = new Text("Welcome to Breakout");
-        welcomeText.setFont(Font.font("Palatino", FontWeight.BOLD, 40.0D));
-        welcomeText.setTextAlignment(TextAlignment.CENTER);
-
+    private void createButtons() {
         myButtons = new ArrayList<>();
-
         playGameButton = new Button("Play Game");
         playGameButton.setOnAction(e -> {
             myStageManager.switchScene(new PauseScreen(myStageManager));
@@ -80,34 +114,8 @@ public class MainScreen extends GenericScreen{
             myStageManager.switchScene(new CheatKeyMode(myStageManager));
         });
         myButtons.add(cheatKeysButton);
-
-
-
-        VBox vBox = new VBox(SIZE/40.0);
-        vBox.getChildren().addAll(new Text(""),new Text(""), new Text(""));
-        vBox.getChildren().add(myPaddle);
-        vBox.getChildren().add(new Text(""));
-        vBox.getChildren().add(welcomeText);
-        vBox.getChildren().add(new Text(""));
-        vBox.getChildren().addAll(playGameButton, playTutorialButton, cheatKeysButton);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().add(new Text(""));
-
-        root.getChildren().add(welcomeScreenBackground);
-        root.getChildren().add(vBox);
-
-        myScene = scene;
-
     }
 
 
-//    private void handleButtonPressed(Button pressedButton) {
-//        if (pressedButton.equals(playGameButton)){
-//            myScene = loadLevelOne(SIZE,SIZE,BACKGROUND);
-//        } else if (pressedButton.equals(playTutorialButton)){
-//            myScene = loadTutorialMode(SIZE,SIZE,BACKGROUND);
-//        } else if (pressedButton.equals(cheatKeysButton)){
-//            myScene = loadCheatKeyScreen(SIZE,SIZE,BACKGROUND);
-//        }
-//    }
+
 }
