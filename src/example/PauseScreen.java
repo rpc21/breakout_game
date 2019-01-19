@@ -25,6 +25,7 @@ public class PauseScreen extends GenericScreen {
     private Text myCurrentDifficultToDisplay;
     private Text myNumberOfLivesRemainingToDisplay;
     private Text actionCompleteText;
+    private Text myAmountOfTimeRemainingToDisplay;
 
     private GameLevel myCurrentLevel;
 
@@ -38,6 +39,7 @@ public class PauseScreen extends GenericScreen {
     public PauseScreen(StageManager stageManager, GameLevel currentLevel){
         this.myStageManager = stageManager;
         myCurrentLevel = currentLevel;
+        actionCompleteText = new Text("");
         initializeStatsFromLevel();
         setUpScene(GenericScreen.SIZE,GenericScreen.SIZE,GenericScreen.BACKGROUND);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -49,6 +51,8 @@ public class PauseScreen extends GenericScreen {
         myCurrentDifficultToDisplay =
                 new Text("Current Difficulty: "+myCurrentLevel.getCurrentMode().getCurrentDifficulty());
         myNumberOfLivesRemainingToDisplay = new Text("Number of Lives Remaining: "+myCurrentLevel.getMyNumberOfLivesRemaining());
+        myAmountOfTimeRemainingToDisplay =
+                new Text("Time Remaining: " + ((int) (myCurrentLevel.getTimeRemaining() / 60000)) + ":"+ ((int) (myCurrentLevel.getTimeRemaining() % 60000)));
     }
 
     @Override
@@ -62,9 +66,10 @@ public class PauseScreen extends GenericScreen {
             System.out.println("My current lives remaining are: "+myCurrentLevel.getMyNumberOfLivesRemaining());
             myVBox.getChildren().add(myCurrentLevelToDisplay);
             myVBox.getChildren().addAll(myCurrentDifficultToDisplay, myScoreToDisplay,
-                    myNumberOfLivesRemainingToDisplay);
+                    myNumberOfLivesRemainingToDisplay, myAmountOfTimeRemainingToDisplay);
         }
         myVBox.getChildren().add(new Text(PAUSE_SCREEN_TEXTS));
+        myVBox.getChildren().add(actionCompleteText);
         myVBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(myVBox);
@@ -73,11 +78,6 @@ public class PauseScreen extends GenericScreen {
 
     }
 
-    @Override
-    protected void step(double elapsedTime) {
-        initializeStatsFromLevel();
-        setUpScene(GenericScreen.SIZE,GenericScreen.SIZE,GenericScreen.BACKGROUND);
-    }
 
     @Override
     protected void handleKeyInput(KeyCode code) {
@@ -86,12 +86,17 @@ public class PauseScreen extends GenericScreen {
         }
         if (code == KeyCode.L){
             myCurrentLevel.setMyNumberOfLivesRemaining(myCurrentLevel.getMyNumberOfLivesRemaining() + 1);
+            myNumberOfLivesRemainingToDisplay.setText("Number of Lives Remaining: "+myCurrentLevel.getMyNumberOfLivesRemaining());
+            actionCompleteText.setText("Added another life!");
         }
         if (code == KeyCode.R){
             myStageManager.switchScene(new GameLevel(myStageManager, myCurrentLevel.getMyLevelNumber()));
         }
         if (code == KeyCode.T){
             myCurrentLevel.setTimeRemaining(Double.MAX_VALUE);
+            myAmountOfTimeRemainingToDisplay.setText("Infinite Time (Practically)");
+            actionCompleteText.setText("Increased time limit!");
+
         }
         if (code == KeyCode.DIGIT1){
             myStageManager.switchScene(new GameLevel(myStageManager,1));
