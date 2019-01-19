@@ -1,5 +1,6 @@
 package example;
 
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,30 +25,78 @@ public class Bouncer extends ImageView {
         myYSpeed = myCurrentMode.getBouncerYSpeed();
     }
 
-    public void updateBouncer(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks){
+    public void updateBouncer(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
+                              Group root){
         updatePosition(elapsedTime);
         handleWallCollisions(scene);
         handlePaddleCollisions(paddle);
-        handleBrickCollisions(bricks, scene);
+        handleBrickCollisions(bricks, root);
+        System.out.println(bricks.size());
 
     }
 
-    private void handleBrickCollisions(ArrayList<GenericBrick> bricks, Scene scene) {
+    private void handleBrickCollisions(ArrayList<GenericBrick> bricks, Group root) {
+        boolean bounceInXDirection = false;
+        boolean bounceInYDirection = false;
         // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
         for (Iterator<GenericBrick> iterator = bricks.iterator(); iterator.hasNext(); ) {
             GenericBrick brick = iterator.next();
             if (bouncerCollidesWithTop(this,brick) || bouncerCollidesWithBottom(this,brick)){
+                root.getChildren().removeAll(brick);
                 iterator.remove();
-                this.myYSpeed *= -1;
+                bounceInYDirection = true;
             }
+            if (bouncerCollidesWithLeft(this,brick) || bouncerCollidesWithRight(this,brick)){
+                root.getChildren().removeAll(brick);
+                iterator.remove();
+                bounceInXDirection = true;
+            }
+        }
+        if(bounceInXDirection){
+            this.myXSpeed *= -1;
+        }
+        if (bounceInYDirection){
+            this.myYSpeed *= -1;
         }
     }
 
+    private boolean bouncerCollidesWithRight(ImageView bouncer, ImageView otherObject) {
+        return ((topLeftCornerIsInYBounds(bouncer, otherObject) || bottomLeftCornerIsInYBounds(bouncer, otherObject)) &&
+                bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() + 1 &&
+                bouncer.getX() >= otherObject.getX() + otherObject.getBoundsInParent().getWidth() - 1);
+    }
+
+    private boolean topLeftCornerIsInYBounds(ImageView bouncer, ImageView otherObject) {
+        return bouncer.getY() <= otherObject.getY() + otherObject.getBoundsInParent().getHeight() &&
+                bouncer.getY() >= otherObject.getY();
+    }
+
+    private boolean bottomLeftCornerIsInYBounds(ImageView bouncer, ImageView otherObject) {
+        return bouncer.getY() + bouncer.getBoundsInParent().getHeight() <= otherObject.getY() + otherObject.getBoundsInParent().getHeight() &&
+                bouncer.getY() + bouncer.getBoundsInParent().getHeight() >= otherObject.getY();
+    }
+
+
+    private boolean bouncerCollidesWithLeft(ImageView bouncer, ImageView otherObject) {
+        return ((topLeftCornerIsInYBounds(bouncer, otherObject) || bottomLeftCornerIsInYBounds(bouncer, otherObject)) &&
+                bouncer.getX() + bouncer.getBoundsInParent().getWidth() <= otherObject.getX() + 1 &&
+                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() - 1);
+    }
+
     private boolean bouncerCollidesWithBottom(ImageView bouncer, ImageView otherObject) {
-        return (bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
-                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() &&
+        return ((leftSideIsInXBounds(bouncer, otherObject) || rightSideIsInXBounds(bouncer, otherObject))&&
                 bouncer.getY() <= otherObject.getY() + otherObject.getBoundsInParent().getWidth() + 1 &&
                 bouncer.getY() >= otherObject.getY() + otherObject.getBoundsInParent().getHeight() - 1);
+    }
+
+    private boolean leftSideIsInXBounds(ImageView bouncer, ImageView otherObject) {
+        return bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
+                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX();
+    }
+
+    private boolean rightSideIsInXBounds(ImageView bouncer, ImageView otherObject) {
+        return bouncer.getX() + bouncer.getBoundsInParent().getWidth() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
+                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX();
     }
 
 
@@ -65,8 +114,7 @@ public class Bouncer extends ImageView {
     }
 
     private boolean bouncerCollidesWithTop(ImageView bouncer, ImageView otherObject) {
-        return (bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
-                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() &&
+        return ((leftSideIsInXBounds(bouncer, otherObject) || rightSideIsInXBounds(bouncer, otherObject)) &&
                 bouncer.getY() + bouncer.getBoundsInParent().getHeight() <= otherObject.getY() + 1 &&
                 bouncer.getY() + bouncer.getBoundsInParent().getHeight() >= otherObject.getY() - 1);
     }

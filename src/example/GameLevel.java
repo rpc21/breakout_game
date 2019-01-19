@@ -29,6 +29,7 @@ public class GameLevel extends GenericScreen{
     private Scene myScene;
     private ArrayList<GenericBrick> myBricks;
     private Level myLevel;
+    private Group root;
 
     @Override
     public Scene getMyScene() {
@@ -49,7 +50,7 @@ public class GameLevel extends GenericScreen{
 
     protected void setUpLevel() {
         // create one top level collection to organize the things in the scene
-        var root = new Group();
+        root = new Group();
         // create a place to see the shapes
         var scene = new Scene(root, SIZE, SIZE, BACKGROUND);
 
@@ -108,7 +109,7 @@ public class GameLevel extends GenericScreen{
     protected void step (double elapsedTime) {
         // update attributes
         myPaddle.updatePaddlePosition(elapsedTime,myScene);
-        myBouncer.updateBouncer(elapsedTime,myScene, myPaddle, myBricks);
+        myBouncer.updateBouncer(elapsedTime,myScene, myPaddle, myBricks, root);
         timeRemaining -= elapsedTime;
 
     }
