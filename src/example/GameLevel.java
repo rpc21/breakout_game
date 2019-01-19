@@ -20,25 +20,30 @@ public class GameLevel extends GenericScreen{
 
     private int myNumberOfLivesRemaining;
     private int playerScore;
-    private int levelNumber;
     private String bricksSpecificationFile;
-    private int timeRemaining;
+    private double timeRemaining;
     private GameDifficulty currentMode;
     private Bouncer myBouncer;
     private Paddle myPaddle;
     private StageManager myStageManager;
     private Scene myScene;
     private ArrayList<GenericBrick> myBricks;
+    private Level myLevel;
 
     @Override
     public Scene getMyScene() {
         return myScene;
     }
 
-    public GameLevel(StageManager stageManager){
+    public GameLevel(){
+        super();
+    }
+
+    public GameLevel(StageManager stageManager, int levelNumber){
         myStageManager = stageManager;
         System.out.println(myStageManager + "is the stageManager in GameLevel");
         currentMode = new GameDifficulty(GameDifficulty.ADVANCED_MODE);
+        myLevel = new Level(levelNumber, currentMode);
         setUpLevel();
     }
 
@@ -47,6 +52,8 @@ public class GameLevel extends GenericScreen{
         var root = new Group();
         // create a place to see the shapes
         var scene = new Scene(root, SIZE, SIZE, BACKGROUND);
+
+        timeRemaining = currentMode.getStartTime();
 
         generateBricks(scene);
 
@@ -77,7 +84,8 @@ public class GameLevel extends GenericScreen{
 
     protected void generateBricks(Scene scene) {
         System.out.println("Reach generate Bricks");
-        myBricks = new ArrayList<>();
+        myBricks = myLevel.getMyBricks();
+
     }
 
     protected void initializeBouncer(Scene scene){
@@ -101,6 +109,7 @@ public class GameLevel extends GenericScreen{
         // update attributes
         myPaddle.updatePaddlePosition(elapsedTime,myScene);
         myBouncer.updateBouncer(elapsedTime,myScene, myPaddle, myBricks);
+        timeRemaining -= elapsedTime;
 
     }
 
