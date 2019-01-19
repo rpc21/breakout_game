@@ -20,7 +20,6 @@ public class GameLevel extends GenericScreen{
 
     private int myNumberOfLivesRemaining;
     private int playerScore;
-    private String bricksSpecificationFile;
     private double timeRemaining;
     private GameDifficulty currentMode;
     private Bouncer myBouncer;
@@ -30,6 +29,7 @@ public class GameLevel extends GenericScreen{
     private ArrayList<GenericBrick> myBricks;
     private Level myLevel;
     private Group root;
+    private int myLevelNumber;
 
     @Override
     public Scene getMyScene() {
@@ -40,11 +40,22 @@ public class GameLevel extends GenericScreen{
         super();
     }
 
+    public GameLevel(GameLevel currentLevel) {
+        this(currentLevel.getMyStageManager(),currentLevel.getMyLevelNumber());
+
+    }
+
+
+
     public GameLevel(StageManager stageManager, int levelNumber){
         myStageManager = stageManager;
         System.out.println(myStageManager + "is the stageManager in GameLevel");
         currentMode = new GameDifficulty(GameDifficulty.ADVANCED_MODE);
         myLevel = new Level(levelNumber, currentMode);
+        myLevelNumber = levelNumber;
+        playerScore = 0;
+        timeRemaining = currentMode.getStartTime();
+        myNumberOfLivesRemaining = currentMode.getStartLives();
         setUpLevel();
     }
 
@@ -111,7 +122,37 @@ public class GameLevel extends GenericScreen{
         myPaddle.updatePaddlePosition(elapsedTime,myScene);
         myBouncer.updateBouncer(elapsedTime,myScene, myPaddle, myBricks, root);
         timeRemaining -= elapsedTime;
+        handleLifeLoss();
+        handleEndOfGame();
+    }
 
+    private void handleEndOfGame() {
+        if (myBricks.size() == 0){
+            System.out.println("Congratulations you won!");
+            displayWinningScreen();
+        }
+        if (myNumberOfLivesRemaining <= 0  || timeRemaining < 0.0){
+            System.out.println("Sorry you lost!");
+            displayLosingScreen();
+        }
+    }
+
+    private void displayLosingScreen() {
+    }
+
+    private void displayWinningScreen() {
+    }
+
+    private void handleLifeLoss() {
+        if (myBouncer.getY() > myPaddle .getY()){
+            myNumberOfLivesRemaining -= 1;
+            root.getChildren().removeAll(myBouncer);
+            root.getChildren().removeAll(myPaddle);
+            initializeBouncer(myScene);
+            initializePaddle(myScene);
+            root.getChildren().addAll(myPaddle,myBouncer);
+            System.out.println(myNumberOfLivesRemaining);
+        }
     }
 
     @Override
@@ -126,8 +167,89 @@ public class GameLevel extends GenericScreen{
             myStageManager.switchScene(myStageManager.getMainScreen());
         }
         else if (code == KeyCode.SPACE){
-            myStageManager.switchScene(myStageManager.getPauseScreen());
+            myStageManager.switchScene(new PauseScreen(myStageManager));
+        }
+        else if (code == KeyCode.ENTER){
+            myBouncer.setMyXSpeed(currentMode.getMaxBouncerXSpeed()/2);
+            myBouncer.setMyYSpeed(currentMode.getBouncerYSpeed());
         }
     }
+
+    public int getMyNumberOfLivesRemaining() {
+        return myNumberOfLivesRemaining;
+    }
+
+    public void setMyNumberOfLivesRemaining(int myNumberOfLivesRemaining) {
+        this.myNumberOfLivesRemaining = myNumberOfLivesRemaining;
+    }
+
+    public int getPlayerScore() {
+        return playerScore;
+    }
+
+    public void setPlayerScore(int playerScore) {
+        this.playerScore = playerScore;
+    }
+
+    public double getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public void setTimeRemaining(double timeRemaining) {
+        this.timeRemaining = timeRemaining;
+    }
+
+    public GameDifficulty getCurrentMode() {
+        return currentMode;
+    }
+
+    public void setCurrentMode(GameDifficulty currentMode) {
+        this.currentMode = currentMode;
+    }
+
+    public Bouncer getMyBouncer() {
+        return myBouncer;
+    }
+
+    public void setMyBouncer(Bouncer myBouncer) {
+        this.myBouncer = myBouncer;
+    }
+
+    public Paddle getMyPaddle() {
+        return myPaddle;
+    }
+
+    public void setMyPaddle(Paddle myPaddle) {
+        this.myPaddle = myPaddle;
+    }
+
+    public StageManager getMyStageManager() {
+        return myStageManager;
+    }
+
+    public void setMyStageManager(StageManager myStageManager) {
+        this.myStageManager = myStageManager;
+    }
+
+    public void setMyScene(Scene myScene) {
+        this.myScene = myScene;
+    }
+
+    public ArrayList<GenericBrick> getMyBricks() {
+        return myBricks;
+    }
+
+    public void setMyBricks(ArrayList<GenericBrick> myBricks) {
+        this.myBricks = myBricks;
+    }
+
+    public Level getMyLevel() {
+        return myLevel;
+    }
+
+    public int getMyLevelNumber() {
+        return myLevelNumber;
+    }
+
 
 }

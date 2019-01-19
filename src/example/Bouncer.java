@@ -21,8 +21,8 @@ public class Bouncer extends ImageView {
     public Bouncer(Image image, GameDifficulty currentMode) {
         super(image);
         myCurrentMode = currentMode;
-        myXSpeed = myCurrentMode.getMaxBouncerXSpeed() / 2;
-        myYSpeed = myCurrentMode.getBouncerYSpeed();
+        myXSpeed = 0;
+        myYSpeed = 0;
     }
 
     public void updateBouncer(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
@@ -133,20 +133,12 @@ public class Bouncer extends ImageView {
         }
     }
 
-    public int getMyXDirection() {
-        return myXDirection;
+
+    public void setMyXSpeed(int myXSpeed) {
+        this.myXSpeed = myXSpeed;
     }
 
-    public void setMyXDirection(int myXDirection) {
-        this.myXDirection = myXDirection;
+    public void setMyYSpeed(int myYSpeed) {
+        this.myYSpeed = myYSpeed;
     }
-
-    public int getMyYDirection() {
-        return myYDirection;
-    }
-
-    public void setMyYDirection(int myYDirection) {
-        this.myYDirection = myYDirection;
-    }
-
 }

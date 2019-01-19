@@ -10,8 +10,8 @@ import javafx.stage.Stage;
 public class GenericScreen {
 
     protected final String TITLE = "Ryan Culhane Game";
-    protected final int SIZE = 500;
-    protected final Paint BACKGROUND = Color.AZURE;
+    public static final int SIZE = 500;
+    public static final Paint BACKGROUND = Color.AZURE;
     protected final String BOUNCER_IMAGE = "ball.gif";
     protected final int BOUNCER_SPEED = 40;
     protected final String PADDLE_IMAGE = "paddle.gif";

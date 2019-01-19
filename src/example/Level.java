@@ -34,6 +34,8 @@ public class Level {
         else if (levelNumber == 3){
             pathToBrickLayout = new File(LEVEL_THREE);
         }
+        System.out.println("Level Number passed: " + levelNumber);
+        System.out.println("Path to brick layout:"+ pathToBrickLayout);
         myBrickGenerator = new BrickGenerator(currentMode);
         myBricks = new ArrayList<>();
         initializeBlocksFromFile();
