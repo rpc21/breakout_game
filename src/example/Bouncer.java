@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Bouncer extends ImageView {
     private static final String BOUNCER_IMAGE = "ball.gif";
@@ -27,15 +28,31 @@ public class Bouncer extends ImageView {
         updatePosition(elapsedTime);
         handleWallCollisions(scene);
         handlePaddleCollisions(paddle);
-        handleBrickCollisions(bricks);
+        handleBrickCollisions(bricks, scene);
 
     }
 
-    private void handleBrickCollisions(ArrayList<GenericBrick> bricks) {
+    private void handleBrickCollisions(ArrayList<GenericBrick> bricks, Scene scene) {
+        // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
+        for (Iterator<GenericBrick> iterator = bricks.iterator(); iterator.hasNext(); ) {
+            GenericBrick brick = iterator.next();
+            if (bouncerCollidesWithTop(this,brick) || bouncerCollidesWithBottom(this,brick)){
+                iterator.remove();
+                this.myYSpeed *= -1;
+            }
+        }
     }
+
+    private boolean bouncerCollidesWithBottom(ImageView bouncer, ImageView otherObject) {
+        return (bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
+                bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() &&
+                bouncer.getY() <= otherObject.getY() + otherObject.getBoundsInParent().getWidth() + 1 &&
+                bouncer.getY() >= otherObject.getY() + otherObject.getBoundsInParent().getHeight() - 1);
+    }
+
 
     private void handlePaddleCollisions(Paddle paddle) {
-        if (collisionBetween(this, paddle)){
+        if (bouncerCollidesWithTop(this, paddle)){
             this.myXSpeed += paddle.getMyVelocity() / 2;
             this.myYSpeed *= -1;
         }
@@ -47,7 +64,7 @@ public class Bouncer extends ImageView {
         }
     }
 
-    private boolean collisionBetween(ImageView bouncer, ImageView otherObject) {
+    private boolean bouncerCollidesWithTop(ImageView bouncer, ImageView otherObject) {
         return (bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
                 bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() &&
                 bouncer.getY() + bouncer.getBoundsInParent().getHeight() <= otherObject.getY() + 1 &&
