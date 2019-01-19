@@ -27,9 +27,9 @@ public class GameLevel extends GenericScreen{
     private StageManager myStageManager;
     private Scene myScene;
     private ArrayList<GenericBrick> myBricks;
-    private Level myLevel;
     private Group root;
     private int myLevelNumber;
+    private BrickManager myBrickManager;
 
     @Override
     public Scene getMyScene() {
@@ -51,8 +51,8 @@ public class GameLevel extends GenericScreen{
         myStageManager = stageManager;
         System.out.println(myStageManager + "is the stageManager in GameLevel");
         currentMode = new GameDifficulty(GameDifficulty.ADVANCED_MODE);
-        myLevel = new Level(levelNumber, currentMode);
         myLevelNumber = levelNumber;
+        myBrickManager = new BrickManager(myLevelNumber,currentMode);
         playerScore = 0;
         timeRemaining = currentMode.getStartTime();
         myNumberOfLivesRemaining = currentMode.getStartLives();
@@ -96,7 +96,7 @@ public class GameLevel extends GenericScreen{
 
     protected void generateBricks(Scene scene) {
         System.out.println("Reach generate Bricks");
-        myBricks = myLevel.getMyBricks();
+        myBricks = myBrickManager.getMyBricks();
 
     }
 
@@ -241,10 +241,6 @@ public class GameLevel extends GenericScreen{
 
     public void setMyBricks(ArrayList<GenericBrick> myBricks) {
         this.myBricks = myBricks;
-    }
-
-    public Level getMyLevel() {
-        return myLevel;
     }
 
     public int getMyLevelNumber() {

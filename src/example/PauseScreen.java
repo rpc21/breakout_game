@@ -49,7 +49,7 @@ public class PauseScreen extends GenericScreen {
         myScoreToDisplay = new Text("Player Score: "+myCurrentLevel.getPlayerScore());
         myCurrentLevelToDisplay = new Text("Current Level: "+myCurrentLevel.getMyLevelNumber());
         myCurrentDifficultToDisplay =
-                new Text("Current Difficulty: "+myCurrentLevel.getCurrentMode().getCurrentDifficulty());
+                new Text("Current Difficulty: "+myCurrentLevel.getCurrentMode().getCurrentDifficultyString());
         myNumberOfLivesRemainingToDisplay = new Text("Number of Lives Remaining: "+myCurrentLevel.getMyNumberOfLivesRemaining());
         myAmountOfTimeRemainingToDisplay =
                 new Text("Time Remaining: " + ((int) (myCurrentLevel.getTimeRemaining() / 60000)) + ":"+ ((int) (myCurrentLevel.getTimeRemaining() % 60000)));
@@ -66,10 +66,9 @@ public class PauseScreen extends GenericScreen {
             System.out.println("My current lives remaining are: "+myCurrentLevel.getMyNumberOfLivesRemaining());
             myVBox.getChildren().add(myCurrentLevelToDisplay);
             myVBox.getChildren().addAll(myCurrentDifficultToDisplay, myScoreToDisplay,
-                    myNumberOfLivesRemainingToDisplay, myAmountOfTimeRemainingToDisplay);
+                    myNumberOfLivesRemainingToDisplay, myAmountOfTimeRemainingToDisplay,actionCompleteText);
         }
         myVBox.getChildren().add(new Text(PAUSE_SCREEN_TEXTS));
-        myVBox.getChildren().add(actionCompleteText);
         myVBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(myVBox);

@@ -27,20 +27,22 @@ public class GameDifficulty {
     private int bouncerYSpeed;
     private double startTime;
     private int startLives;
-    private String currentDifficulty;
+    private String currentDifficultyString;
+    private int myCurrentMode;
 
     public double getStartTime() {
         return startTime;
     }
 
     public GameDifficulty(int currentMode){
+        myCurrentMode = currentMode;
         if (currentMode == INTERMEDIATE_MODE){
             maxBouncerXSpeed = INTERMEDIATE_MODE_MAX_X_SPEED;
             minBouncerXSpeed = INTERMEDIATE_MODE_MIN_X_SPEED;
             bouncerYSpeed = INTERMEDIATE_MODE_Y_SPEED;
             startTime = INTERMEDIATE_START_TIME;
             startLives = INTERMEDIATE_START_LIVES;
-            currentDifficulty = "Intermediate";
+            currentDifficultyString = "Intermediate";
         }
         else if (currentMode == ADVANCED_MODE){
             maxBouncerXSpeed = ADVANCED_MODE_MAX_X_SPEED;
@@ -48,7 +50,7 @@ public class GameDifficulty {
             bouncerYSpeed = ADVANCED_MODE_Y_SPEED;
             startTime = ADVANCED_START_TIME;
             startLives = ADVANCED_START_LIVES;
-            currentDifficulty = "Advanced";
+            currentDifficultyString = "Advanced";
         }
         else {
             maxBouncerXSpeed = BEGINNING_MODE_MAX_X_SPEED;
@@ -56,7 +58,7 @@ public class GameDifficulty {
             bouncerYSpeed = BEGINNING_MODE_Y_SPEED;
             startTime = BEGINNING_START_TIME;
             startLives = BEGINNING_START_LIVES;
-            currentDifficulty = "Beginner";
+            currentDifficultyString = "Beginner";
         }
     }
 
@@ -76,7 +78,11 @@ public class GameDifficulty {
         return startLives;
     }
 
-    public String getCurrentDifficulty() {
-        return currentDifficulty;
+    public String getCurrentDifficultyString() {
+        return currentDifficultyString;
+    }
+
+    public int getMyCurrentMode() {
+        return myCurrentMode;
     }
 }

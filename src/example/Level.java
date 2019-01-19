@@ -9,7 +9,7 @@ public class Level {
     public static final String LEVEL_TWO = "resources/level_two_layout.txt";
     public static final String LEVEL_THREE = "resources/level_three_layout.txt";
 
-    private BrickGenerator myBrickGenerator;
+    private BrickManager myBrickManager;
     private File pathToBrickLayout;
     private ArrayList<GenericBrick> myBricks;
 
@@ -19,7 +19,7 @@ public class Level {
 
     public Level(){
         pathToBrickLayout = new File(LEVEL_ONE);
-        myBrickGenerator = new BrickGenerator(new GameDifficulty(GameDifficulty.BEGINNING_MODE));
+        myBrickManager = new BrickManager(new GameDifficulty(GameDifficulty.BEGINNING_MODE));
         myBricks = new ArrayList<>();
         initializeBlocksFromFile();
     }
@@ -36,7 +36,7 @@ public class Level {
         }
         System.out.println("Level Number passed: " + levelNumber);
         System.out.println("Path to brick layout:"+ pathToBrickLayout);
-        myBrickGenerator = new BrickGenerator(currentMode);
+        myBrickManager = new BrickManager(currentMode);
         myBricks = new ArrayList<>();
         initializeBlocksFromFile();
     }
@@ -52,7 +52,7 @@ public class Level {
                 double brickSize = GamePlayer.SIZE * 0.8 / lineLength;
                 for(int i=0; i<brickLocations.length; i++){
                     if(brickLocations[i] == '-'){
-                        myBricks.add(myBrickGenerator.generateBrick((double) i*GamePlayer.SIZE/lineLength + 0.1*brickSize,0.1*counter*GamePlayer.SIZE, brickSize));
+                        myBricks.add(myBrickManager.generateBrick((double) i*GamePlayer.SIZE/lineLength + 0.1*brickSize,0.1*counter*GamePlayer.SIZE, brickSize));
                     }
                 }
                 System.out.println(currentLine);
