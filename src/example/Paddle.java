@@ -23,6 +23,11 @@ public class Paddle extends ImageView {
         myVelocity = 0;
     }
 
+    public Paddle(Scene scene, Paddle paddle){
+        this(scene);
+        myVelocity = paddle.getMyVelocity();
+    }
+
     public Paddle(Scene scene){
         super(new Image(PADDLE_IMAGE));
         setX(scene.getWidth() / 2 - this.getBoundsInLocal().getWidth() / 2);

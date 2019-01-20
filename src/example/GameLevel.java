@@ -40,6 +40,7 @@ public class GameLevel extends GenericScreen{
     protected Text timeText;
     protected Text livesRemainingText;
     private boolean activeGameMode;
+    private PowerUpManager myPowerUpManager;
 
     @Override
     public Scene getMyScene() {
@@ -67,6 +68,7 @@ public class GameLevel extends GenericScreen{
         timeRemaining = currentMode.getStartTime();
         myNumberOfLivesRemaining = currentMode.getStartLives();
         setUpLevel();
+        myPowerUpManager = new PowerUpManager(root, myPaddle, myBrickManager);
     }
 
     protected void setUpLevel() {
@@ -150,6 +152,7 @@ public class GameLevel extends GenericScreen{
         playerScore = myBrickManager.getMyScore();
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
+        myPowerUpManager.displayStateOfPowerUps();
         if (activeGameMode) {
             timeRemaining -= elapsedTime;
         }
