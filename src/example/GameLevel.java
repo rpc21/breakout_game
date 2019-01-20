@@ -150,7 +150,10 @@ public class GameLevel extends GenericScreen{
             myPaddle.updatePaddlePosition(elapsedTime,myScene);
             List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
                     root);
-            myBrickManager.handleEffectedBricks(effectedBricks, root);
+            int powerUpToHandle = myBrickManager.handleEffectedBricks(effectedBricks, root);
+            if (isValidPowerUpNumber(powerUpToHandle)){
+                handlePowerUp(powerUpToHandle);
+            }
             myPowerUpManager.updatePowerUpStatus(elapsedTime);
 
             handleLifeLoss();
@@ -169,6 +172,25 @@ public class GameLevel extends GenericScreen{
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
         myPowerUpManager.displayStateOfPowerUps();
+    }
+
+    private void handlePowerUp(int powerUpToHandle) {
+        if (powerUpToHandle == 4){
+            importantMessages.setText("You just got an extra life!");
+            myNumberOfLivesRemaining += 1;
+        }
+        else if (powerUpToHandle == 5){
+            importantMessages.setText("You just got more time!");
+            timeRemaining += 10;
+        }
+        else{
+            myPowerUpManager.addPowerUp(powerUpToHandle);
+            importantMessages.setText("You just got a new power up, see top left!");
+        }
+    }
+
+    private boolean isValidPowerUpNumber(int powerUpToHandle) {
+        return powerUpToHandle >= 0 && powerUpToHandle <= 5;
     }
 
     private void updateTopLine() {
@@ -234,6 +256,7 @@ public class GameLevel extends GenericScreen{
         initializeBouncer(myScene);
         initializePaddle(myScene);
         myPowerUpManager.resetPowerUpManager(myBouncer, myPaddle);
+        myPaddle.setMyVelocity(0);
         root.getChildren().addAll(myPaddle,myBouncer);
     }
 
