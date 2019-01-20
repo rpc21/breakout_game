@@ -1,18 +1,16 @@
 package example;
 
-import javafx.scene.image.Image;
+import javafx.scene.Group;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class BrickManager {
-
-    public static final int BEGINNING_MODE = 13789;
-    public static final int INTERMEDIATE_MODE = 13790;
-    public static final int ADVANCED_MODE = 13791;
 
     public static final String LEVEL_ONE = "resources/level_one_layout.txt";
     public static final String LEVEL_TWO = "resources/level_two_layout.txt";
@@ -21,14 +19,10 @@ public class BrickManager {
     private File pathToBrickLayout;
     private ArrayList<GenericBrick> myBricks;
 
-    public static final String ONE_HIT_BRICK_IMAGE = "brick1.gif";
-    public static final String TWO_HIT_BRICK_IMAGE = "brick2.gif";
-    public static final String THREE_HIT_BRICK_IMAGE = "brick3.gif";
-    public static final String FOUR_HIT_BRICK_IMAGE = "brick4.gif";
-    public static final String FIVE_HIT_BRICK_IMAGE = "brick5.gif";
-
 
     private int myCurrentMode;
+    private int myScore;
+    private boolean loseLifeDueToDangerBrick;
 
     public BrickManager(GameDifficulty currentMode){
         this(1,currentMode);
@@ -39,6 +33,8 @@ public class BrickManager {
     }
 
     public BrickManager(int levelNumber, GameDifficulty currentMode){
+        myScore = 0;
+        loseLifeDueToDangerBrick = false;
         myCurrentMode = currentMode.getMyCurrentMode();
         if (levelNumber == 2){
             pathToBrickLayout = new File(LEVEL_TWO);
@@ -72,7 +68,7 @@ public class BrickManager {
     private GenericBrick generateBeginningBrick(double xPos, double yPos, double brickLength) {
         double randomNumber = Math.random();
         if (randomNumber <= 0.6D){
-            return new GenericBrick(xPos,yPos,brickLength);
+            return new OneHitBrick(xPos,yPos,brickLength);
         }
         else if (randomNumber <= 0.9D){
             return new TwoHitBrick(xPos,yPos,brickLength);
@@ -83,11 +79,41 @@ public class BrickManager {
     }
 
     private GenericBrick generateIntermediateBrick(double xPos, double yPos, double brickLength) {
-        return generateBeginningBrick(xPos,yPos,brickLength);
+        double randomNumber = Math.random();
+        if (randomNumber <= 0.4D){
+            return new OneHitBrick(xPos,yPos,brickLength);
+        }
+        else if (randomNumber <= 0.6D){
+            return new TwoHitBrick(xPos,yPos,brickLength);
+        }
+        else if (randomNumber <= 0.8D){
+            return new ThreeHitBrick(xPos, yPos, brickLength);
+        }
+        else if (randomNumber <= 0.95D){
+            return new PermanentBrick(xPos,yPos,brickLength);
+        }
+        else{
+            return new DangerBrick(xPos, yPos, brickLength);
+        }
     }
 
     private GenericBrick generateAdvancedBrick(double xPos, double yPos, double brickLength) {
-        return generateBeginningBrick(xPos,yPos,brickLength);
+        double randomNumber = Math.random();
+        if (randomNumber <= 0.3D){
+            return new OneHitBrick(xPos,yPos,brickLength);
+        }
+        else if (randomNumber <= 0.5D){
+            return new TwoHitBrick(xPos,yPos,brickLength);
+        }
+        else if (randomNumber <= 0.7D){
+            return new ThreeHitBrick(xPos, yPos, brickLength);
+        }
+        else if (randomNumber <= 0.9D){
+            return new PermanentBrick(xPos,yPos,brickLength);
+        }
+        else{
+            return new DangerBrick(xPos, yPos, brickLength);
+        }
     }
 
 
@@ -114,7 +140,56 @@ public class BrickManager {
         }
     }
 
+    public void handleEffectedBricks(List<GenericBrick> effectedBricks, Group root) {
+        for (Iterator<GenericBrick> iterator = effectedBricks.iterator(); iterator.hasNext(); ) {
+            GenericBrick brick = iterator.next();
+            if (effectedBricks.contains(brick)){
+                myScore += brick.getMyPointValue();
+                removeOrReplaceBrick(brick, root);
+            }
+        }
+    }
+
+    private void removeOrReplaceBrick(GenericBrick brick, Group root) {
+        if (brick instanceof DangerBrick){
+            loseLifeDueToDangerBrick = true;
+            myBricks.remove(brick);
+            root.getChildren().removeAll(brick);
+        }
+        if (brick instanceof ThreeHitBrick){
+            TwoHitBrick replacementBrick = new TwoHitBrick(brick);
+            replaceBrick(brick, root, replacementBrick);
+        }
+        else if (brick instanceof TwoHitBrick){
+            GenericBrick replacementBrick = new OneHitBrick(brick);
+            replaceBrick(brick, root, replacementBrick);
+        }
+        else if (brick != null){
+            myBricks.remove(brick);
+            root.getChildren().removeAll(brick);
+        }
+    }
+
+    private void replaceBrick(GenericBrick brick, Group root, GenericBrick replacementBrick) {
+        myBricks.add(replacementBrick);
+        root.getChildren().add(replacementBrick);
+        myBricks.remove(brick);
+        root.getChildren().removeAll(brick);
+    }
+
     public ArrayList<GenericBrick> getMyBricks() {
         return myBricks;
+    }
+
+    public int getMyScore() {
+        return myScore;
+    }
+
+    public boolean isLoseLifeDueToDangerBrick() {
+        return loseLifeDueToDangerBrick;
+    }
+
+    public void setLoseLifeDueToDangerBrick(boolean loseLifeDueToDangerBrick) {
+        this.loseLifeDueToDangerBrick = loseLifeDueToDangerBrick;
     }
 }

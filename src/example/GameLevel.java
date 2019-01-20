@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameLevel extends GenericScreen{
 
@@ -120,14 +121,17 @@ public class GameLevel extends GenericScreen{
     protected void step (double elapsedTime) {
         // update attributes
         myPaddle.updatePaddlePosition(elapsedTime,myScene);
-        myBouncer.updateBouncer(elapsedTime,myScene, myPaddle, myBricks, root);
+        List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
+                root);
+        myBrickManager.handleEffectedBricks(effectedBricks, root);
         timeRemaining -= elapsedTime;
         handleLifeLoss();
         handleEndOfGame();
     }
 
+
     private void handleEndOfGame() {
-        if (myBricks.size() == 0){
+        if (onlyPermanentAndDangerBricksRemain()){
             System.out.println("Congratulations you won!");
             displayWinningScreen();
         }
@@ -137,6 +141,15 @@ public class GameLevel extends GenericScreen{
         }
     }
 
+    private boolean onlyPermanentAndDangerBricksRemain() {
+        for (GenericBrick brick: myBrickManager.getMyBricks()){
+            if (brick instanceof OneHitBrick || brick instanceof TwoHitBrick || brick instanceof ThreeHitBrick){
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void displayLosingScreen() {
     }
 
@@ -144,7 +157,7 @@ public class GameLevel extends GenericScreen{
     }
 
     private void handleLifeLoss() {
-        if (myBouncer.getY() > myPaddle .getY()){
+        if (myBouncer.getY() > myPaddle .getY() || myBrickManager.isLoseLifeDueToDangerBrick()){
             myNumberOfLivesRemaining -= 1;
             root.getChildren().removeAll(myBouncer);
             root.getChildren().removeAll(myPaddle);
@@ -152,6 +165,7 @@ public class GameLevel extends GenericScreen{
             initializePaddle(myScene);
             root.getChildren().addAll(myPaddle,myBouncer);
             System.out.println(myNumberOfLivesRemaining);
+            myBrickManager.setLoseLifeDueToDangerBrick(false);
         }
     }
 

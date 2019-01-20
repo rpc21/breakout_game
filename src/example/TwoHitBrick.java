@@ -14,4 +14,10 @@ public class TwoHitBrick extends GenericBrick {
         myPointValue = TWO_HIT_BRICK_POINT_VALUE;
     }
 
+    public TwoHitBrick(GenericBrick brick){
+        super(brick.getX(),brick.getY(),brick.getFitWidth(),new Image(TWO_HIT_BRICK_IMAGE));
+        myPointValue = TWO_HIT_BRICK_POINT_VALUE;
+
+    }
+
 }

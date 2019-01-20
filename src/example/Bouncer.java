@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Bouncer extends ImageView {
     private static final String BOUNCER_IMAGE = "ball.gif";
@@ -25,30 +26,32 @@ public class Bouncer extends ImageView {
         myYSpeed = 0;
     }
 
-    public void updateBouncer(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
-                              Group root){
+    public List<GenericBrick> handleBouncerCollisions(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
+                                                      Group root){
         updatePosition(elapsedTime);
         handleWallCollisions(scene);
         handlePaddleCollisions(paddle);
-        handleBrickCollisions(bricks, root);
-        System.out.println(bricks.size());
-
+        List<GenericBrick> effectedBricks = findEffectedBricks(bricks, root);
+        return effectedBricks;
     }
 
-    private void handleBrickCollisions(ArrayList<GenericBrick> bricks, Group root) {
+    private List<GenericBrick> findEffectedBricks(List<GenericBrick> bricks, Group root) {
+        List<GenericBrick> effectedBricks = new ArrayList<>();
         boolean bounceInXDirection = false;
         boolean bounceInYDirection = false;
         // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
         for (Iterator<GenericBrick> iterator = bricks.iterator(); iterator.hasNext(); ) {
             GenericBrick brick = iterator.next();
             if (bouncerCollidesWithTop(this,brick) || bouncerCollidesWithBottom(this,brick)){
-                root.getChildren().removeAll(brick);
-                iterator.remove();
+                effectedBricks.add(brick);
+//                root.getChildren().removeAll(brick);
+//                iterator.remove();
                 bounceInYDirection = true;
             }
             if (bouncerCollidesWithLeft(this,brick) || bouncerCollidesWithRight(this,brick)){
-                root.getChildren().removeAll(brick);
-                iterator.remove();
+                effectedBricks.add(brick);
+//                root.getChildren().removeAll(brick);
+//                iterator.remove();
                 bounceInXDirection = true;
             }
         }
@@ -58,6 +61,7 @@ public class Bouncer extends ImageView {
         if (bounceInYDirection){
             this.myYSpeed *= -1;
         }
+        return effectedBricks;
     }
 
     private boolean bouncerCollidesWithRight(ImageView bouncer, ImageView otherObject) {

@@ -77,7 +77,7 @@ public class TutorialMode extends GenericScreen{
 //    protected void step (double elapsedTime) {
 //        // update attributes
 //        for(Bouncer bouncer : myBouncers) {
-//            bouncer.updateBouncer(elapsedTime, myScene);
+//            bouncer.handleBouncerCollisions(elapsedTime, myScene);
 //
 //        }
 //    }
