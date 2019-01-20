@@ -145,7 +145,7 @@ public class GameLevel extends GenericScreen{
     @Override
     protected void step (double elapsedTime) {
         // update attributes
-        if (activeGameMode && !myPowerUpManager.isInDestroyMode()) {
+        if (activeGameMode && !myPowerUpManager.isInDestroyMode() && !myPowerUpManager.isInBallDropperMode()) {
             timeRemaining -= elapsedTime;
             myPaddle.updatePaddlePosition(elapsedTime,myScene);
             List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
@@ -155,6 +155,15 @@ public class GameLevel extends GenericScreen{
 
             handleLifeLoss();
             handleEndOfGame();
+        }
+        if (myPowerUpManager.isInBallDropperMode()){
+            if (!myPowerUpManager.getMyBouncerDrop().isEmpty()){
+                myPowerUpManager.updateBouncerDropBouncers(elapsedTime);
+            }
+            else {
+                myPowerUpManager.setInBallDropperMode(false);
+            }
+
         }
         playerScore = myBrickManager.getMyScore();
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);

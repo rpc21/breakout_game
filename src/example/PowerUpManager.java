@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PowerUpManager {
 
@@ -32,6 +33,7 @@ public class PowerUpManager {
     private Bouncer myGameBouncer;
     private BrickManager myBrickManager;
     private boolean inDestroyMode;
+    private boolean inBallDropperMode;
 
     public PowerUpManager(Group root, Paddle gamePaddle, Bouncer gameBouncer, BrickManager brickManager){
         this.root = root;
@@ -43,6 +45,7 @@ public class PowerUpManager {
         myStandardPaddleSize = myGamePaddle.getLayoutBounds().getWidth();
         myBrickManager = brickManager;
         inDestroyMode = false;
+        inBallDropperMode = false;
         myExtraPaddle = new Paddle(root.getScene());
         myLongPaddle = new Paddle(root.getScene());
         myLongPaddle.setFitWidth(myExtraPaddle.getFitWidth()* EXTRA_LONG_PADDLE_SIZE);
@@ -62,9 +65,9 @@ public class PowerUpManager {
         myBouncerDrop.clear();
         for (int i = 0; i < BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP; i++){
             Bouncer bouncer = new Bouncer(root.getScene());
-            bouncer.setY(0);
+            bouncer.setY(2.0D);
             bouncer.setX(i * root.getScene().getWidth() / BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP);
-            bouncer.setMyYSpeed(250);
+            bouncer.setMyYSpeed(100);
             myBouncerDrop.add(bouncer);
         }
     }
@@ -109,6 +112,9 @@ public class PowerUpManager {
         }
         else if (powerUpNumber == BALL_DROPPER_POWERUP_NUMBER && myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] > 0){
             myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] = myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] - 1;
+            resetMyBouncerDrop();
+            root.getChildren().addAll(myBouncerDrop);
+            inBallDropperMode = true;
 
         }
         else if (powerUpNumber == LONG_PADDLE_POWERUP_NUMBER && myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] > 0){
@@ -116,6 +122,25 @@ public class PowerUpManager {
             myLongPaddleTimeRemaining = POWERUP_LIFETIME;
             myGamePaddle.setFitWidth(myStandardPaddleSize*EXTRA_LONG_PADDLE_SIZE);
         }
+    }
+
+    public void updateBouncerDropBouncers(double elapsedTime) {
+        List<Bouncer> bouncersToBeRemoved = new ArrayList<>();
+        List<GenericBrick> bricksToBeRemoved = new ArrayList<>();
+        for (Bouncer bouncer : myBouncerDrop){
+//            bouncer.setX(2.0D);
+            bricksToBeRemoved.addAll(bouncer.handleBouncerCollisions(elapsedTime, root.getScene(), myGamePaddle,
+                    myBrickManager.getMyBricks(),
+                    root));
+            System.out.println(bouncer.getMyYSpeed());
+            if (bouncer.getMyYSpeed() < 0){
+                bouncersToBeRemoved.add(bouncer);
+            }
+        }
+        myBrickManager.getMyBricks().removeAll(bricksToBeRemoved);
+        root.getChildren().removeAll(bricksToBeRemoved);
+        myBouncerDrop.removeAll(bouncersToBeRemoved);
+        root.getChildren().removeAll(bouncersToBeRemoved);
     }
 
     private void handleMouseClick(double x, double y) {
@@ -142,7 +167,7 @@ public class PowerUpManager {
         }
         myExtraPaddle.updatePaddlePosition(elapsedTime, root.getScene());
         myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
-        System.out.println(myGamePaddle.getMyVelocity() +" "+ myExtraPaddle.getMyVelocity());
+//        System.out.println(myGamePaddle.getMyVelocity() +" "+ myExtraPaddle.getMyVelocity());
         if (root.getChildren().contains(myExtraPaddle) && myExtraPaddleTimeRemaining > 0) {
             myGameBouncer.handlePaddleCollisions(myExtraPaddle);
         }
@@ -178,5 +203,17 @@ public class PowerUpManager {
 
     public void setInDestroyMode(boolean inDestroyMode) {
         this.inDestroyMode = inDestroyMode;
+    }
+
+    public boolean isInBallDropperMode() {
+        return inBallDropperMode;
+    }
+
+    public void setInBallDropperMode(boolean inBallDropperMode) {
+        this.inBallDropperMode = inBallDropperMode;
+    }
+
+    public ArrayList<Bouncer> getMyBouncerDrop() {
+        return myBouncerDrop;
     }
 }
