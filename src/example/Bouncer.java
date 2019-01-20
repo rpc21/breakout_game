@@ -143,6 +143,13 @@ public class Bouncer extends ImageView {
         }
     }
 
+    public int getMyXSpeed() {
+        return myXSpeed;
+    }
+
+    public int getMyYSpeed() {
+        return myYSpeed;
+    }
 
     public void setMyXSpeed(int myXSpeed) {
         this.myXSpeed = myXSpeed;

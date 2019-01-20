@@ -128,8 +128,9 @@ public class BrickManager {
                 double brickSize = GamePlayer.SIZE * 0.8 / lineLength;
                 for(int i=0; i<brickLocations.length; i++){
                     if(brickLocations[i] == '-'){
-                        myBricks.add(generateBrick((double) i*GamePlayer.SIZE/lineLength + 0.1*brickSize,
-                                0.1*counter*GamePlayer.SIZE, brickSize));
+                        GenericBrick brickToAdd = generateBrick((double) i*GamePlayer.SIZE/lineLength + 0.1*brickSize,
+                                0.1*counter*GamePlayer.SIZE, brickSize);
+                        myBricks.add(brickToAdd);
                     }
                 }
                 System.out.println(currentLine);

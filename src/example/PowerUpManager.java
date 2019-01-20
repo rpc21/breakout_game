@@ -31,6 +31,7 @@ public class PowerUpManager {
     private Paddle myGamePaddle;
     private Bouncer myGameBouncer;
     private BrickManager myBrickManager;
+    private boolean inDestroyMode;
 
     public PowerUpManager(Group root, Paddle gamePaddle, Bouncer gameBouncer, BrickManager brickManager){
         this.root = root;
@@ -41,6 +42,7 @@ public class PowerUpManager {
         myGameBouncer = gameBouncer;
         myStandardPaddleSize = myGamePaddle.getLayoutBounds().getWidth();
         myBrickManager = brickManager;
+        inDestroyMode = false;
         myExtraPaddle = new Paddle(root.getScene());
         myLongPaddle = new Paddle(root.getScene());
         myLongPaddle.setFitWidth(myExtraPaddle.getFitWidth()* EXTRA_LONG_PADDLE_SIZE);
@@ -101,6 +103,8 @@ public class PowerUpManager {
         else if(powerUpNumber == SELECT_AND_DESTROY_POWERUP_NUMBER && myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] > 0){
             myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] =
                     myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] - 1;
+            inDestroyMode = true;
+            root.getScene().setOnMouseClicked(e -> handleMouseClick(e.getX(), e.getY()));
 
         }
         else if (powerUpNumber == BALL_DROPPER_POWERUP_NUMBER && myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] > 0){
@@ -112,6 +116,24 @@ public class PowerUpManager {
             myLongPaddleTimeRemaining = POWERUP_LIFETIME;
             myGamePaddle.setFitWidth(myStandardPaddleSize*EXTRA_LONG_PADDLE_SIZE);
         }
+    }
+
+    private void handleMouseClick(double x, double y) {
+        if (inDestroyMode) {
+            GenericBrick brickToRemove = null;
+            for (GenericBrick brick : myBrickManager.getMyBricks()) {
+                if (brick.contains(x, y)) {
+                    brickToRemove = brick;
+                    break;
+                }
+            }
+            if (brickToRemove != null) {
+                myBrickManager.getMyBricks().remove(brickToRemove);
+                root.getChildren().remove(brickToRemove);
+            }
+        }
+        inDestroyMode = false;
+
     }
 
     public void updatePowerUpStatus(double elapsedTime){
@@ -148,5 +170,13 @@ public class PowerUpManager {
     public void resetPowerUpManager(Bouncer myBouncer, Paddle myPaddle) {
         myGameBouncer = myBouncer;
         myGamePaddle = myPaddle;
+    }
+
+    public boolean isInDestroyMode() {
+        return inDestroyMode;
+    }
+
+    public void setInDestroyMode(boolean inDestroyMode) {
+        this.inDestroyMode = inDestroyMode;
     }
 }

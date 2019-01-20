@@ -145,20 +145,21 @@ public class GameLevel extends GenericScreen{
     @Override
     protected void step (double elapsedTime) {
         // update attributes
-        myPaddle.updatePaddlePosition(elapsedTime,myScene);
-        List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
-                root);
-        myBrickManager.handleEffectedBricks(effectedBricks, root);
+        if (activeGameMode && !myPowerUpManager.isInDestroyMode()) {
+            timeRemaining -= elapsedTime;
+            myPaddle.updatePaddlePosition(elapsedTime,myScene);
+            List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
+                    root);
+            myBrickManager.handleEffectedBricks(effectedBricks, root);
+            myPowerUpManager.updatePowerUpStatus(elapsedTime);
+
+            handleLifeLoss();
+            handleEndOfGame();
+        }
         playerScore = myBrickManager.getMyScore();
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
         myPowerUpManager.displayStateOfPowerUps();
-        myPowerUpManager.updatePowerUpStatus(elapsedTime);
-        if (activeGameMode) {
-            timeRemaining -= elapsedTime;
-        }
-        handleLifeLoss();
-        handleEndOfGame();
     }
 
     private void updateTopLine() {
@@ -171,10 +172,12 @@ public class GameLevel extends GenericScreen{
         if (onlyPermanentAndDangerBricksRemain()){
 //            System.out.println("Congratulations you won!");
             displayWinningScreen();
+            activeGameMode = false;
         }
         if (gameIsOver()){
             System.out.println("Sorry you lost!");
             displayLosingScreen();
+            activeGameMode = false;
         }
     }
 
@@ -262,6 +265,7 @@ public class GameLevel extends GenericScreen{
         }
         else if (code == KeyCode.D){
             myPowerUpManager.usePowerUp(PowerUpManager.SELECT_AND_DESTROY_POWERUP_NUMBER);
+
         }
         else if (code == KeyCode.B){
             myPowerUpManager.usePowerUp(PowerUpManager.BALL_DROPPER_POWERUP_NUMBER);
@@ -271,6 +275,13 @@ public class GameLevel extends GenericScreen{
         }
         myPowerUpManager.handleKeyInput(code);
 
+    }
+
+    private void exitDestroyMode() {
+        if (myPowerUpManager.isInDestroyMode()){
+            myPowerUpManager.setInDestroyMode(false);
+            activeGameMode = true;
+        }
     }
 
     public int getMyNumberOfLivesRemaining() {
