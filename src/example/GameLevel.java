@@ -1,9 +1,7 @@
 package example;
 
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -17,17 +15,17 @@ import java.util.List;
 public class GameLevel extends GenericScreen{
 
     public static final String BOUNCER_IMAGE = "ball.gif";
-    public static final String PADDLE_IMAGE = "paddle.gif";
     public static final Paint BACKGROUND = Color.AZURE;
     public static final int SIZE = 500;
-
+    public static final double BOTTOM_LINE_DISPLAY_LOCATION = 0.95;
+    public static final double TOP_LINE_DISPLAY_LOCATION = 0.03;
 
 
     private int myNumberOfLivesRemaining;
     private int playerScore;
     private double timeRemaining;
     private GameDifficulty currentMode;
-    private Bouncer myBouncer;
+    protected Bouncer myBouncer;
     private Paddle myPaddle;
     private StageManager myStageManager;
     private Scene myScene;
@@ -35,12 +33,12 @@ public class GameLevel extends GenericScreen{
     private Group root;
     private int myLevelNumber;
     private BrickManager myBrickManager;
-    private HBox topLineDisplay;
-    private HBox bottomLineDisplay;
-    private Text importantMessages;
-    private Text scoreText;
-    private Text timeText;
-    private Text livesRemainingText;
+    protected HBox topLineDisplay;
+    protected HBox bottomLineDisplay;
+    protected Text importantMessages;
+    protected Text scoreText;
+    protected Text timeText;
+    protected Text livesRemainingText;
 
     @Override
     public Scene getMyScene() {
@@ -102,23 +100,21 @@ public class GameLevel extends GenericScreen{
 
     }
 
-    private void initializeTopLineDisplay(Scene scene) {
+    protected void initializeTopLineDisplay(Scene scene) {
         topLineDisplay = new HBox(10.0D);
         scoreText = new Text("Score: "+playerScore);
         timeText = new Text("Time Remaining: "+ ((int) timeRemaining)+" seconds");
         livesRemainingText = new Text("Lives Remaining: "+myNumberOfLivesRemaining);
         topLineDisplay.getChildren().addAll(timeText,scoreText,livesRemainingText);
-        topLineDisplay.relocate(scene.getWidth()/2 - topLineDisplay.getBoundsInParent().getWidth()/2,
-                scene.getHeight()*0.03);
+        centerHBoxText(topLineDisplay, scene.getHeight()* TOP_LINE_DISPLAY_LOCATION, scene);
     }
 
-    private void initializeBottomLine(Scene scene) {
+    protected void initializeBottomLine(Scene scene) {
         bottomLineDisplay = new HBox(10.0D);
         importantMessages = new Text("Press ENTER to Set Ball in Motion");
         bottomLineDisplay.getChildren().add(importantMessages);
         importantMessages.setTextAlignment(TextAlignment.CENTER);
-        bottomLineDisplay.relocate(scene.getWidth()/2 - bottomLineDisplay.getBoundsInParent().getWidth()/2,
-                scene.getHeight()*0.95);
+        centerHBoxText(bottomLineDisplay, scene.getHeight()*BOTTOM_LINE_DISPLAY_LOCATION, scene);
     }
 
     private void createKeyBindings(Scene scene) {
@@ -134,18 +130,12 @@ public class GameLevel extends GenericScreen{
 
     protected void initializeBouncer(Scene scene){
         System.out.println("Raeched initialize Bouncer");
-        var bouncerImage = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
-        myBouncer = new Bouncer(bouncerImage, currentMode);
-        myBouncer.setX(scene.getWidth() / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
-        myBouncer.setY(scene.getHeight() * 0.6D);
+        myBouncer = new Bouncer(scene, currentMode);
     }
 
     protected void initializePaddle(Scene scene){
         System.out.println("Reached initialize Paddle");
-        var paddleImage = new Image(this.getClass().getClassLoader().getResourceAsStream(PADDLE_IMAGE));
-        myPaddle = new Paddle(paddleImage);
-        myPaddle.setX(scene.getWidth() / 2 - myPaddle.getBoundsInLocal().getWidth() / 2);
-        myPaddle.setY(scene.getHeight() * 0.9);
+        myPaddle = new Paddle(scene);
     }
 
     @Override
@@ -157,7 +147,7 @@ public class GameLevel extends GenericScreen{
         myBrickManager.handleEffectedBricks(effectedBricks, root);
         playerScore = myBrickManager.getMyScore();
         timeRemaining -= elapsedTime;
-        centerBottomLineText();
+        centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
         handleLifeLoss();
         handleEndOfGame();
@@ -196,14 +186,14 @@ public class GameLevel extends GenericScreen{
     private void displayLosingScreen() {
         resetBouncerAndPaddle();
         importantMessages.setText("Bummer, you lost! Press BACKSPACE to go back to the main screen or R to retry");
-        centerBottomLineText();
+        centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
 
     }
 
     private void displayWinningScreen() {
         resetBouncerAndPaddle();
         importantMessages.setText("Congratulations, you won!!! Press SPACE to try a new level or R to retry");
-        centerBottomLineText();
+        centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
     }
 
     private void handleLifeLoss() {
@@ -213,7 +203,7 @@ public class GameLevel extends GenericScreen{
             System.out.println(myNumberOfLivesRemaining);
             myBrickManager.setLoseLifeDueToDangerBrick(false);
             importantMessages.setText("Lost a life!!! Press ENTER to set ball in motion");
-            centerBottomLineText();
+            centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         }
     }
 
@@ -247,14 +237,9 @@ public class GameLevel extends GenericScreen{
             importantMessages.setText("Press SPACE to pause the game");
             myBouncer.setMyXSpeed(currentMode.getMaxBouncerXSpeed()/2);
             myBouncer.setMyYSpeed(currentMode.getBouncerYSpeed());
-            centerBottomLineText();
+            centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         }
 
-    }
-
-    private void centerBottomLineText() {
-        bottomLineDisplay.relocate(myScene.getWidth()/2 - bottomLineDisplay.getBoundsInParent().getWidth()/2,
-                myScene.getHeight()*0.95);
     }
 
     public int getMyNumberOfLivesRemaining() {

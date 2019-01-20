@@ -3,6 +3,7 @@ package example;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -51,4 +52,8 @@ public class GenericScreen {
 
     protected void step(double elapsedTime){}
 
+    protected void centerHBoxText(HBox hBox, double height, Scene scene) {
+        hBox.relocate(scene.getWidth()/2 - hBox.getBoundsInParent().getWidth()/2,
+                height);
+    }
 }

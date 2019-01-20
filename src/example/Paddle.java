@@ -10,6 +10,8 @@ public class Paddle extends ImageView {
     public static final int MAX_PADDLE_VELOCITY = 120;
     public static final int PADDLE_ACCELERATION = 30;
     public static final int MIN_PADDLE_VELOCITY = -120;
+    public static final String PADDLE_IMAGE = "paddle.gif";
+
     private int myVelocity;
 
     public int getMyVelocity() {
@@ -18,6 +20,13 @@ public class Paddle extends ImageView {
 
     public Paddle(Image image){
         super(image);
+        myVelocity = 0;
+    }
+
+    public Paddle(Scene scene){
+        super(new Image(PADDLE_IMAGE));
+        setX(scene.getWidth() / 2 - this.getBoundsInLocal().getWidth() / 2);
+        setY(scene.getHeight() * 0.9);
         myVelocity = 0;
     }
 

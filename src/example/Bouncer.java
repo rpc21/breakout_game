@@ -19,11 +19,17 @@ public class Bouncer extends ImageView {
     private GameDifficulty myCurrentMode;
 
 
-    public Bouncer(Image image, GameDifficulty currentMode) {
-        super(image);
+    public Bouncer(Scene scene){
+        this(scene, new GameDifficulty(GameDifficulty.BEGINNING_MODE));
+    }
+
+    public Bouncer(Scene scene, GameDifficulty currentMode) {
+        super(new Image(BOUNCER_IMAGE));
         myCurrentMode = currentMode;
         myXSpeed = 0;
         myYSpeed = 0;
+        setX(scene.getWidth() / 2 - this.getBoundsInLocal().getWidth() / 2);
+        setY(scene.getHeight() * 0.6D);
     }
 
     public List<GenericBrick> handleBouncerCollisions(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
