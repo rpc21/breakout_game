@@ -12,4 +12,9 @@ public class DangerBrick extends GenericBrick {
         super(xPos, yPos, brickLength, new Image(DANGER_BRICK_IMAGE));
         myPointValue = 0;
     }
+
+    @Override
+    public int getMyPointValue() {
+        return myPointValue;
+    }
 }

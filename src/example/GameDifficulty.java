@@ -8,17 +8,17 @@ public class GameDifficulty {
     public static final int BEGINNING_MODE_MAX_X_SPEED = 60;
     public static final int BEGINNING_MODE_MIN_X_SPEED = -60;
     public static final int BEGINNING_MODE_Y_SPEED = 60;
-    public static final int BEGINNING_START_TIME = 240000;
+    public static final int BEGINNING_START_TIME = 240;
     public static final int BEGINNING_START_LIVES = 5;
     public static final int INTERMEDIATE_MODE_MAX_X_SPEED = 90;
     public static final int INTERMEDIATE_MODE_MIN_X_SPEED = -90;
     public static final int INTERMEDIATE_MODE_Y_SPEED = 90;
-    public static final int INTERMEDIATE_START_TIME = 180000;
+    public static final int INTERMEDIATE_START_TIME = 180;
     public static final int INTERMEDIATE_START_LIVES = 4;
     public static final int ADVANCED_MODE_MAX_X_SPEED = 120;
     public static final int ADVANCED_MODE_MIN_X_SPEED = -120;
     public static final int ADVANCED_MODE_Y_SPEED = 120;
-    public static final int ADVANCED_START_TIME = 120000;
+    public static final int ADVANCED_START_TIME = 120;
     public static final int ADVANCED_START_LIVES = 3;
 
 

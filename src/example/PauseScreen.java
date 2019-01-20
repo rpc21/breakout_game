@@ -16,7 +16,13 @@ public class PauseScreen extends GenericScreen {
             "'D' - Destroy any block by clicking on it\n" +
             "# keys - Jump to level of that number\n" +
             "'P' - gain access to all power ups\n"+
-            "BACKSPACE always will return to the start menu";
+            "BACKSPACE always will return to the start menu\n\n"+
+            "Press '1' to begin Level 1\n"+
+            "Press '2' to begin Level 2\n"+
+            "Press '3' to begin Level 3\n"+
+            "Press 'B' to change to beginner mode\n"+
+            "Press 'I' to change to intermediate mode\n"+
+            "Press 'A' to change to advanced mode\n";
 
     private VBox myVBox;
 
@@ -52,7 +58,7 @@ public class PauseScreen extends GenericScreen {
                 new Text("Current Difficulty: "+myCurrentLevel.getCurrentMode().getCurrentDifficultyString());
         myNumberOfLivesRemainingToDisplay = new Text("Number of Lives Remaining: "+myCurrentLevel.getMyNumberOfLivesRemaining());
         myAmountOfTimeRemainingToDisplay =
-                new Text("Time Remaining: " + ((int) (myCurrentLevel.getTimeRemaining() / 60000)) + ":"+ ((int) (myCurrentLevel.getTimeRemaining() % 60000)));
+                new Text("Time Remaining: " + ((int) (myCurrentLevel.getTimeRemaining())) + " seconds");
     }
 
     @Override
@@ -89,7 +95,8 @@ public class PauseScreen extends GenericScreen {
             actionCompleteText.setText("Added another life!");
         }
         if (code == KeyCode.R){
-            myStageManager.switchScene(new GameLevel(myStageManager, myCurrentLevel.getMyLevelNumber()));
+            myStageManager.switchScene(new GameLevel(myStageManager, myCurrentLevel.getMyLevelNumber(),
+                    myCurrentLevel.getCurrentMode().getMyCurrentMode()));
         }
         if (code == KeyCode.T){
             myCurrentLevel.setTimeRemaining(Double.MAX_VALUE);
@@ -98,16 +105,34 @@ public class PauseScreen extends GenericScreen {
 
         }
         if (code == KeyCode.DIGIT1){
-            myStageManager.switchScene(new GameLevel(myStageManager,1));
+            myStageManager.switchScene(new GameLevel(myStageManager,1,myCurrentLevel.getCurrentMode().getMyCurrentMode()));
         }
         if (code == KeyCode.DIGIT2){
-            myStageManager.switchScene(new GameLevel(myStageManager, 2));
+            myStageManager.switchScene(new GameLevel(myStageManager, 2, myCurrentLevel.getCurrentMode().getMyCurrentMode()));
         }
         if (code == KeyCode.DIGIT3){
-            myStageManager.switchScene(new GameLevel(myStageManager, 3));
+            myStageManager.switchScene(new GameLevel(myStageManager, 3, myCurrentLevel.getCurrentMode().getMyCurrentMode()));
         }
         if (code == KeyCode.BACK_SPACE){
             myStageManager.switchScene(new MainScreen(myStageManager));
+        }
+        if (code == KeyCode.B){
+            myCurrentLevel.setCurrentMode(new GameDifficulty(GameDifficulty.BEGINNING_MODE));
+            actionCompleteText.setText("Changed to beginning mode, changes will take effect when you begin new level");
+//            myStageManager.switchScene(new GameLevel(myStageManager,myCurrentLevel.getMyLevelNumber(),
+//                    GameDifficulty.BEGINNING_MODE));
+        }
+        if (code == KeyCode.I){
+            myCurrentLevel.setCurrentMode(new GameDifficulty(GameDifficulty.INTERMEDIATE_MODE));
+            actionCompleteText.setText("Changed to intermediate mode, changes will take effect when you begin new " +
+                    "level");
+//            myStageManager.switchScene(new GameLevel(myStageManager,myCurrentLevel.getMyLevelNumber(),GameDifficulty.INTERMEDIATE_MODE));
+        }
+        if (code == KeyCode.A){
+            myCurrentLevel.setCurrentMode(new GameDifficulty(GameDifficulty.ADVANCED_MODE));
+            actionCompleteText.setText("Changed to advanced mode, changes will take effect when you begin new level");
+//            myStageManager.switchScene(new GameLevel(myStageManager,myCurrentLevel.getMyLevelNumber(),
+//                    GameDifficulty.ADVANCED_MODE));
         }
     }
 

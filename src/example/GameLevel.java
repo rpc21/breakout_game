@@ -1,11 +1,15 @@
 package example;
 
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,12 @@ public class GameLevel extends GenericScreen{
     private Group root;
     private int myLevelNumber;
     private BrickManager myBrickManager;
+    private HBox topLineDisplay;
+    private HBox bottomLineDisplay;
+    private Text importantMessages;
+    private Text scoreText;
+    private Text timeText;
+    private Text livesRemainingText;
 
     @Override
     public Scene getMyScene() {
@@ -42,16 +52,15 @@ public class GameLevel extends GenericScreen{
     }
 
     public GameLevel(GameLevel currentLevel) {
-        this(currentLevel.getMyStageManager(),currentLevel.getMyLevelNumber());
-
+        this(currentLevel.getMyStageManager(),currentLevel.getMyLevelNumber(), currentLevel.getCurrentMode().getMyCurrentMode());
     }
 
 
 
-    public GameLevel(StageManager stageManager, int levelNumber){
+    public GameLevel(StageManager stageManager, int levelNumber, int gameDifficulty){
         myStageManager = stageManager;
         System.out.println(myStageManager + "is the stageManager in GameLevel");
-        currentMode = new GameDifficulty(GameDifficulty.ADVANCED_MODE);
+        currentMode = new GameDifficulty(gameDifficulty);
         myLevelNumber = levelNumber;
         myBrickManager = new BrickManager(myLevelNumber,currentMode);
         playerScore = 0;
@@ -72,10 +81,14 @@ public class GameLevel extends GenericScreen{
 
         initializeBouncer(scene);
         initializePaddle(scene);
+        initializeTopLineDisplay(scene);
+        initializeBottomLine(scene);
 
         root.getChildren().add(myBouncer);
         root.getChildren().add(myPaddle);
         root.getChildren().addAll(myBricks);
+        root.getChildren().add(bottomLineDisplay);
+        root.getChildren().add(topLineDisplay);
 
         System.out.println("Reached past adding the children");
 
@@ -89,10 +102,28 @@ public class GameLevel extends GenericScreen{
 
     }
 
+    private void initializeTopLineDisplay(Scene scene) {
+        topLineDisplay = new HBox(10.0D);
+        scoreText = new Text("Score: "+playerScore);
+        timeText = new Text("Time Remaining: "+ ((int) timeRemaining)+" seconds");
+        livesRemainingText = new Text("Lives Remaining: "+myNumberOfLivesRemaining);
+        topLineDisplay.getChildren().addAll(timeText,scoreText,livesRemainingText);
+        topLineDisplay.relocate(scene.getWidth()/2 - topLineDisplay.getBoundsInParent().getWidth()/2,
+                scene.getHeight()*0.03);
+    }
+
+    private void initializeBottomLine(Scene scene) {
+        bottomLineDisplay = new HBox(10.0D);
+        importantMessages = new Text("Press ENTER to Set Ball in Motion");
+        bottomLineDisplay.getChildren().add(importantMessages);
+        importantMessages.setTextAlignment(TextAlignment.CENTER);
+        bottomLineDisplay.relocate(scene.getWidth()/2 - bottomLineDisplay.getBoundsInParent().getWidth()/2,
+                scene.getHeight()*0.95);
+    }
+
     private void createKeyBindings(Scene scene) {
         System.out.println(myStageManager+"is the stageManager when keyBindings get assigned");
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-//        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
     }
 
     protected void generateBricks(Scene scene) {
@@ -106,7 +137,7 @@ public class GameLevel extends GenericScreen{
         var bouncerImage = new Image(this.getClass().getClassLoader().getResourceAsStream(BOUNCER_IMAGE));
         myBouncer = new Bouncer(bouncerImage, currentMode);
         myBouncer.setX(scene.getWidth() / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
-        myBouncer.setY(scene.getHeight() / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
+        myBouncer.setY(scene.getHeight() * 0.6D);
     }
 
     protected void initializePaddle(Scene scene){
@@ -124,21 +155,33 @@ public class GameLevel extends GenericScreen{
         List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
                 root);
         myBrickManager.handleEffectedBricks(effectedBricks, root);
+        playerScore = myBrickManager.getMyScore();
         timeRemaining -= elapsedTime;
+        centerBottomLineText();
+        updateTopLine();
         handleLifeLoss();
         handleEndOfGame();
     }
 
+    private void updateTopLine() {
+        scoreText.setText("Score: "+playerScore);
+        timeText.setText("Time Remaining: "+((int) timeRemaining) + " seconds");
+        livesRemainingText.setText("Lives Remaining: "+myNumberOfLivesRemaining);
+    }
 
     private void handleEndOfGame() {
         if (onlyPermanentAndDangerBricksRemain()){
             System.out.println("Congratulations you won!");
             displayWinningScreen();
         }
-        if (myNumberOfLivesRemaining <= 0  || timeRemaining < 0.0){
+        if (gameIsOver()){
             System.out.println("Sorry you lost!");
             displayLosingScreen();
         }
+    }
+
+    private boolean gameIsOver() {
+        return myNumberOfLivesRemaining <= 0  || timeRemaining < 0.0;
     }
 
     private boolean onlyPermanentAndDangerBricksRemain() {
@@ -151,22 +194,35 @@ public class GameLevel extends GenericScreen{
     }
 
     private void displayLosingScreen() {
+        resetBouncerAndPaddle();
+        importantMessages.setText("Bummer, you lost! Press BACKSPACE to go back to the main screen or R to retry");
+        centerBottomLineText();
+
     }
 
     private void displayWinningScreen() {
+        resetBouncerAndPaddle();
+        importantMessages.setText("Congratulations, you won!!! Press SPACE to try a new level or R to retry");
+        centerBottomLineText();
     }
 
     private void handleLifeLoss() {
-        if (myBouncer.getY() > myPaddle .getY() || myBrickManager.isLoseLifeDueToDangerBrick()){
+        if (myBouncer.getY() > myPaddle.getY() || myBrickManager.isLoseLifeDueToDangerBrick()){
             myNumberOfLivesRemaining -= 1;
-            root.getChildren().removeAll(myBouncer);
-            root.getChildren().removeAll(myPaddle);
-            initializeBouncer(myScene);
-            initializePaddle(myScene);
-            root.getChildren().addAll(myPaddle,myBouncer);
+            resetBouncerAndPaddle();
             System.out.println(myNumberOfLivesRemaining);
             myBrickManager.setLoseLifeDueToDangerBrick(false);
+            importantMessages.setText("Lost a life!!! Press ENTER to set ball in motion");
+            centerBottomLineText();
         }
+    }
+
+    private void resetBouncerAndPaddle() {
+        root.getChildren().removeAll(myBouncer);
+        root.getChildren().removeAll(myPaddle);
+        initializeBouncer(myScene);
+        initializePaddle(myScene);
+        root.getChildren().addAll(myPaddle,myBouncer);
     }
 
     @Override
@@ -183,10 +239,22 @@ public class GameLevel extends GenericScreen{
         else if (code == KeyCode.SPACE){
             myStageManager.switchScene(new PauseScreen(myStageManager));
         }
+        else if (code == KeyCode.R && gameIsOver()) {
+            myStageManager.switchScene(new GameLevel(myStageManager, myLevelNumber,
+                    currentMode.getMyCurrentMode()));
+        }
         else if (code == KeyCode.ENTER){
+            importantMessages.setText("Press SPACE to pause the game");
             myBouncer.setMyXSpeed(currentMode.getMaxBouncerXSpeed()/2);
             myBouncer.setMyYSpeed(currentMode.getBouncerYSpeed());
+            centerBottomLineText();
         }
+
+    }
+
+    private void centerBottomLineText() {
+        bottomLineDisplay.relocate(myScene.getWidth()/2 - bottomLineDisplay.getBoundsInParent().getWidth()/2,
+                myScene.getHeight()*0.95);
     }
 
     public int getMyNumberOfLivesRemaining() {

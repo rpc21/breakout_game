@@ -95,7 +95,7 @@ public class MainScreen extends GenericScreen{
         myButtons = new ArrayList<>();
         playGameButton = new Button("Play Game");
         playGameButton.setOnAction(e -> {
-            myStageManager.switchScene(myStageManager.getGameLevel());
+            myStageManager.switchScene(new PauseScreen(myStageManager));
         });
         myButtons.add(playGameButton);
 

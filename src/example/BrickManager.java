@@ -164,7 +164,7 @@ public class BrickManager {
             GenericBrick replacementBrick = new OneHitBrick(brick);
             replaceBrick(brick, root, replacementBrick);
         }
-        else if (brick != null){
+        else if (brick instanceof OneHitBrick){
             myBricks.remove(brick);
             root.getChildren().removeAll(brick);
         }

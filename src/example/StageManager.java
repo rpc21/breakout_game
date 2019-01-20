@@ -18,7 +18,7 @@ public class StageManager {
 
     public StageManager(Stage stage) {
         this.mainScreen = new MainScreen(this);
-        this.gameLevel = new GameLevel(this,3);
+        this.gameLevel = new GameLevel(this,1,GameDifficulty.BEGINNING_MODE);
         this.pauseScreen = new PauseScreen(this);
         this.cheatKeyMode = new CheatKeyMode(this);
         this.tutorialMode = new TutorialMode(this);
