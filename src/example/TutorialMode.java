@@ -34,6 +34,9 @@ public class TutorialMode extends GenericScreen{
     public static final double TOP_HBOX_DISPLAY_HEIGHT = 0.2;
     public static final double BOTTOM_HBOX_DISPLAY_HEIGHT = 0.8;
     public static final double CENTER_HBOX_DISPLAY_HEIGHT = 0.5;
+    public static final int TUTORIAL_BOUNCER_Y_SPEED = 40;
+    public static final int TUTORIAL_BOUNCER_X_SPEED = 20;
+    public static final double TUTORIAL_BOUNCER_STARTING_HEIGHT = 0.45;
 
 
     private Text tutorialInstructionsText;
@@ -111,27 +114,64 @@ public class TutorialMode extends GenericScreen{
                     "The paddle can also wrap around the screen.");
             centerInstructionsText.setText("");
             root.getChildren().add(myPaddle);
-            myPaddle.setX(myScene.getWidth()/2 - myPaddle.getBoundsInLocal().getWidth()/2);
-            myPaddle.setY(myScene.getHeight()/2);
+            resetPaddle();
 
         }
         else if (myTutorialNumber == 2){
-            
+            tutorialInstructionsText.setText("Move the paddle to be under the bouncer when it falls.\n"+
+                    "If the bouncer goes below the paddle you lose a life.\n"+
+                    "See how the paddle's speed changes how the bouncer bounces off the paddle.\n"+
+                    "Press ENTER to set the bouncer in motion.");
+            root.getChildren().add(myBouncer);
+            resetBouncerAndPaddle();
 
         }
         else if (myTutorialNumber == 3){
-
+            root.getChildren().remove(myBouncer);
+            root.getChildren().remove(myPaddle);
+            tutorialInstructionsText.setText("As you play there are different types of bricks you will encounter.\n"+
+                    "This one is a generic brick that can be cleared after one collision with the bouncer.\n"+
+                    "This brick adds 10 points to your score each time it is hit.");
+            root.getChildren().add(myOneHitBrick);
         }
         else if (myTutorialNumber == 4){
+            root.getChildren().remove(myOneHitBrick);
+            tutorialInstructionsText.setText("As you play there are different types of bricks you will encounter.\n"+
+                    "This one is a brick that takes two collisions with the bouncer to clear.\n"+
+                    "This brick adds 10 points to your score each time it is hit.");
+            root.getChildren().add(myTwoHitBrick);
 
         }
         else if (myTutorialNumber == 5){
+            root.getChildren().remove(myTwoHitBrick);
+            tutorialInstructionsText.setText("As you play there are different types of bricks you will encounter.\n"+
+                    "This one is a brick that takes three collisions with the bouncer to clear.\n"+
+                    "This brick adds 10 points to your score each time it is hit.");
+            root.getChildren().add(myThreeHitBrick);
 
         }
         else if (myTutorialNumber == 6){
+            root.getChildren().remove(myThreeHitBrick);
+            tutorialInstructionsText.setText("As you play there are different types of bricks you will encounter.\n"+
+                    "This one is a brick that is cannot be cleared by collisions with the bouncer.\n"+
+                    "This brick adds 0 points to your score when it is hit.\n"+
+                    "This brick does not have to be cleared to " +
+                    "complete the level." +
+                    ".\n"+
+                    "This kind of brick can only be found when playing in the Intermediate and Advanced modes.");
+            root.getChildren().add(myPermanentBrick);
 
         }
         else if (myTutorialNumber == 7){
+            root.getChildren().remove(myPermanentBrick);
+            tutorialInstructionsText.setText("As you play there are different types of bricks you will encounter.\n"+
+                    "Be careful! A collision with this brick will cost you a life but will then disappear.\n"+
+                    "This brick adds 0 points to your score when it is hit.\n"+
+                    "This brick does not have to be cleared to " +
+                    "complete the level." +
+                    ".\n"+
+                    "This kind of brick can only be found when playing in the Intermediate and Advanced modes.");
+            root.getChildren().add(myDangerBrick);
 
         }
         else if (myTutorialNumber == 8){
@@ -171,6 +211,28 @@ public class TutorialMode extends GenericScreen{
             tutorialInstructionsText.setText("You can change the paddle's speed with the left or right arrows, try " +
                     "it!");
         }
+        myBouncer.handleBouncerCollisions(elapsedTime,myScene,myPaddle, new ArrayList<>(), root);
+        if (myBouncer.getY() >= myPaddle.getY()){
+            resetBouncerAndPaddle();
+        }
+    }
+
+    private void resetBouncerAndPaddle() {
+        resetPaddle();
+        resetBouncer();
+    }
+
+    private void resetPaddle() {
+        myPaddle.setY(myScene.getHeight() * (BOTTOM_HBOX_DISPLAY_HEIGHT - 0.05));
+        myPaddle.setX(myScene.getWidth()/2 - myPaddle.getBoundsInLocal().getWidth()/2);
+        myPaddle.setMyVelocity(0);
+    }
+
+    private void resetBouncer() {
+        myBouncer.setMyXSpeed(0);
+        myBouncer.setMyYSpeed(0);
+        myBouncer.setX(myScene.getWidth()/2 - myBouncer.getBoundsInLocal().getWidth()/2);
+        myBouncer.setY(myScene.getHeight() * TUTORIAL_BOUNCER_STARTING_HEIGHT);
     }
 
     @Override
@@ -180,6 +242,10 @@ public class TutorialMode extends GenericScreen{
         }
         else if (code == KeyCode.LEFT) {
             myPaddle.decreaseVelocity();
+        }
+        else if (code == KeyCode.ENTER){
+            myBouncer.setMyYSpeed(TUTORIAL_BOUNCER_Y_SPEED);
+            myBouncer.setMyXSpeed(TUTORIAL_BOUNCER_X_SPEED);
         }
     }
 

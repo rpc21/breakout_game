@@ -52,4 +52,8 @@ public class Paddle extends ImageView {
             setX(this.getX() + scene.getWidth());
         }
     }
+
+    public void setMyVelocity(int myVelocity) {
+        this.myVelocity = myVelocity;
+    }
 }
