@@ -2,6 +2,7 @@ package example;
 
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
@@ -26,15 +27,19 @@ public class PowerUpManager {
     private Group root;
     private double myExtraPaddleTimeRemaining;
     private double myLongPaddleTimeRemaining;
+    private double myStandardPaddleSize;
     private Paddle myGamePaddle;
+    private Bouncer myGameBouncer;
     private BrickManager myBrickManager;
 
-    public PowerUpManager(Group root, Paddle gamePaddle, BrickManager brickManager){
+    public PowerUpManager(Group root, Paddle gamePaddle, Bouncer gameBouncer, BrickManager brickManager){
         this.root = root;
         myDisplay = new HBox(10.0);
         root.getChildren().add(myDisplay);
         initializePowerUpArray();
         myGamePaddle = gamePaddle;
+        myGameBouncer = gameBouncer;
+        myStandardPaddleSize = myGamePaddle.getLayoutBounds().getWidth();
         myBrickManager = brickManager;
         myExtraPaddle = new Paddle(root.getScene());
         myLongPaddle = new Paddle(root.getScene());
@@ -86,9 +91,12 @@ public class PowerUpManager {
         if(powerUpNumber == EXTRA_PADDLE_POWERUP_NUMBER && myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] > 0){
             myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] - 1;
             myExtraPaddleTimeRemaining = POWERUP_LIFETIME;
-            myExtraPaddle = new Paddle(root.getScene(), myGamePaddle);
+//            myExtraPaddle = new Paddle(root.getScene(), myGamePaddle);
             myExtraPaddle.setX(myGamePaddle.getX() + root.getScene().getWidth()/2);
-            root.getChildren().add(myExtraPaddle);
+            myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
+            if (!root.getChildren().contains(myExtraPaddle)){
+                root.getChildren().add(myExtraPaddle);
+            }
         }
         else if(powerUpNumber == SELECT_AND_DESTROY_POWERUP_NUMBER && myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] > 0){
             myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] =
@@ -102,14 +110,43 @@ public class PowerUpManager {
         else if (powerUpNumber == LONG_PADDLE_POWERUP_NUMBER && myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] > 0){
             myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] - 1;
             myLongPaddleTimeRemaining = POWERUP_LIFETIME;
-            myGamePaddle.setFitWidth(myGamePaddle.getFitWidth()*EXTRA_LONG_PADDLE_SIZE);
+            myGamePaddle.setFitWidth(myStandardPaddleSize*EXTRA_LONG_PADDLE_SIZE);
         }
     }
 
+    public void updatePowerUpStatus(double elapsedTime){
+        if (root.getChildren().contains(myExtraPaddle) && myExtraPaddleTimeRemaining <= 0){
+            root.getChildren().remove(myExtraPaddle);
+        }
+        myExtraPaddle.updatePaddlePosition(elapsedTime, root.getScene());
+        myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
+        System.out.println(myGamePaddle.getMyVelocity() +" "+ myExtraPaddle.getMyVelocity());
+        if (root.getChildren().contains(myExtraPaddle) && myExtraPaddleTimeRemaining > 0) {
+            myGameBouncer.handlePaddleCollisions(myExtraPaddle);
+        }
+        myExtraPaddleTimeRemaining -= elapsedTime;
 
 
+        if (myGamePaddle.getLayoutBounds().getWidth() != myStandardPaddleSize && myLongPaddleTimeRemaining <= 0){
+            myGamePaddle.setFitWidth((myStandardPaddleSize));
+        }
+        myLongPaddleTimeRemaining -= elapsedTime;
 
 
+    }
 
 
+    public void handleKeyInput(KeyCode code) {
+        if (code == KeyCode.RIGHT) {
+            myExtraPaddle.increaseVelocity();
+        }
+        else if (code == KeyCode.LEFT) {
+            myExtraPaddle.decreaseVelocity();
+        }
+    }
+
+    public void resetPowerUpManager(Bouncer myBouncer, Paddle myPaddle) {
+        myGameBouncer = myBouncer;
+        myGamePaddle = myPaddle;
+    }
 }

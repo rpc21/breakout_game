@@ -68,7 +68,7 @@ public class GameLevel extends GenericScreen{
         timeRemaining = currentMode.getStartTime();
         myNumberOfLivesRemaining = currentMode.getStartLives();
         setUpLevel();
-        myPowerUpManager = new PowerUpManager(root, myPaddle, myBrickManager);
+        myPowerUpManager = new PowerUpManager(root, myPaddle, myBouncer, myBrickManager);
     }
 
     protected void setUpLevel() {
@@ -153,6 +153,7 @@ public class GameLevel extends GenericScreen{
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
         myPowerUpManager.displayStateOfPowerUps();
+        myPowerUpManager.updatePowerUpStatus(elapsedTime);
         if (activeGameMode) {
             timeRemaining -= elapsedTime;
         }
@@ -220,6 +221,7 @@ public class GameLevel extends GenericScreen{
         root.getChildren().removeAll(myPaddle);
         initializeBouncer(myScene);
         initializePaddle(myScene);
+        myPowerUpManager.resetPowerUpManager(myBouncer, myPaddle);
         root.getChildren().addAll(myPaddle,myBouncer);
     }
 
@@ -248,6 +250,26 @@ public class GameLevel extends GenericScreen{
             myBouncer.setMyYSpeed(currentMode.getBouncerYSpeed());
             centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         }
+        else if (code == KeyCode.P){
+            for (int j = 0; j<10; j++){
+                for (int i = 0; i<4; i++){
+                    myPowerUpManager.addPowerUp(i);
+                }
+            }
+        }
+        else if (code == KeyCode.E){
+            myPowerUpManager.usePowerUp(PowerUpManager.EXTRA_PADDLE_POWERUP_NUMBER);
+        }
+        else if (code == KeyCode.D){
+            myPowerUpManager.usePowerUp(PowerUpManager.SELECT_AND_DESTROY_POWERUP_NUMBER);
+        }
+        else if (code == KeyCode.B){
+            myPowerUpManager.usePowerUp(PowerUpManager.BALL_DROPPER_POWERUP_NUMBER);
+        }
+        else if (code == KeyCode.L){
+            myPowerUpManager.usePowerUp(PowerUpManager.LONG_PADDLE_POWERUP_NUMBER);
+        }
+        myPowerUpManager.handleKeyInput(code);
 
     }
 

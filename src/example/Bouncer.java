@@ -110,7 +110,7 @@ public class Bouncer extends ImageView {
     }
 
 
-    private void handlePaddleCollisions(Paddle paddle) {
+    public void handlePaddleCollisions(Paddle paddle) {
         if (bouncerCollidesWithTop(this, paddle)){
             this.myXSpeed += paddle.getMyVelocity() / 2;
             this.myYSpeed *= -1;
