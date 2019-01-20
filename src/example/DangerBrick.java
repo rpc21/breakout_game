@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 
 public class DangerBrick extends GenericBrick {
 
-    public static final String DANGER_BRICK_IMAGE = "brick5.gif";
+    public static final String DANGER_BRICK_IMAGE = "brick10.gif";
 
     private int myPointValue;
 

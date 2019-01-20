@@ -39,6 +39,7 @@ public class GameLevel extends GenericScreen{
     protected Text scoreText;
     protected Text timeText;
     protected Text livesRemainingText;
+    private boolean activeGameMode;
 
     @Override
     public Scene getMyScene() {
@@ -62,6 +63,7 @@ public class GameLevel extends GenericScreen{
         myLevelNumber = levelNumber;
         myBrickManager = new BrickManager(myLevelNumber,currentMode);
         playerScore = 0;
+        activeGameMode = false;
         timeRemaining = currentMode.getStartTime();
         myNumberOfLivesRemaining = currentMode.getStartLives();
         setUpLevel();
@@ -111,7 +113,7 @@ public class GameLevel extends GenericScreen{
 
     protected void initializeBottomLine(Scene scene) {
         bottomLineDisplay = new HBox(10.0D);
-        importantMessages = new Text("Press ENTER to Set Ball in Motion");
+        importantMessages = new Text("Press ENTER to Set bouncer in Motion");
         bottomLineDisplay.getChildren().add(importantMessages);
         importantMessages.setTextAlignment(TextAlignment.CENTER);
         centerHBoxText(bottomLineDisplay, scene.getHeight()*BOTTOM_LINE_DISPLAY_LOCATION, scene);
@@ -146,9 +148,11 @@ public class GameLevel extends GenericScreen{
                 root);
         myBrickManager.handleEffectedBricks(effectedBricks, root);
         playerScore = myBrickManager.getMyScore();
-        timeRemaining -= elapsedTime;
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
+        if (activeGameMode) {
+            timeRemaining -= elapsedTime;
+        }
         handleLifeLoss();
         handleEndOfGame();
     }
@@ -161,7 +165,7 @@ public class GameLevel extends GenericScreen{
 
     private void handleEndOfGame() {
         if (onlyPermanentAndDangerBricksRemain()){
-            System.out.println("Congratulations you won!");
+//            System.out.println("Congratulations you won!");
             displayWinningScreen();
         }
         if (gameIsOver()){
@@ -192,7 +196,7 @@ public class GameLevel extends GenericScreen{
 
     private void displayWinningScreen() {
         resetBouncerAndPaddle();
-        importantMessages.setText("Congratulations, you won!!! Press SPACE to try a new level or R to retry");
+        importantMessages.setText("Congratulations, you won!!! Press SPACE to try a new level.");
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
     }
 
@@ -200,9 +204,10 @@ public class GameLevel extends GenericScreen{
         if (myBouncer.getY() > myPaddle.getY() || myBrickManager.isLoseLifeDueToDangerBrick()){
             myNumberOfLivesRemaining -= 1;
             resetBouncerAndPaddle();
+            activeGameMode = false;
             System.out.println(myNumberOfLivesRemaining);
             myBrickManager.setLoseLifeDueToDangerBrick(false);
-            importantMessages.setText("Lost a life!!! Press ENTER to set ball in motion");
+            importantMessages.setText("Lost a life!!! Press ENTER to set bouncer in motion");
             centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         }
     }
@@ -235,6 +240,7 @@ public class GameLevel extends GenericScreen{
         }
         else if (code == KeyCode.ENTER){
             importantMessages.setText("Press SPACE to pause the game");
+            activeGameMode = true;
             myBouncer.setMyXSpeed(currentMode.getMaxBouncerXSpeed()/2);
             myBouncer.setMyYSpeed(currentMode.getBouncerYSpeed());
             centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);

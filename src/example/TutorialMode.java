@@ -106,7 +106,7 @@ public class TutorialMode extends GenericScreen{
             navigationInstructionsText.setText("Click to advance to next tutorial");
             centerInstructionsText.setText("The objective of the game is to clear all clearable bricks before you run" +
                     " out of time or lives.\n"+
-                    "You lose a life if the ball goes below your paddle");
+                    "You lose a life if the bouncer goes below your paddle");
         }
         else if (myTutorialNumber == 1){
             tutorialInstructionsText.setText("You can change the paddle's speed with the left or right arrows, try " +
@@ -175,6 +175,11 @@ public class TutorialMode extends GenericScreen{
 
         }
         else if (myTutorialNumber == 8){
+            root.getChildren().remove(myDangerBrick);
+            tutorialInstructionsText.setText("You will also encounter various power-ups when you play.\n"+
+                    "When you destroy a brick there is a chance you will receive a power-up.\n"+
+                    "Messages regarding power-ups will be displayed at the bottom of the screen.\n"+
+                    "Let's explore some of the power-ups you may encounter!");
 
         }
         else if (myTutorialNumber == 9){
@@ -237,6 +242,10 @@ public class TutorialMode extends GenericScreen{
 
     @Override
     protected void handleKeyInput(KeyCode code) {
+        if (code == KeyCode.BACK_SPACE){
+            System.out.println(myStageManager+"is the stageManager on line 47");
+            myStageManager.switchScene(myStageManager.getMainScreen());
+        }
         if (code == KeyCode.RIGHT) {
             myPaddle.increaseVelocity();
         }
