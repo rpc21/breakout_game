@@ -11,18 +11,30 @@ import java.util.List;
 
 public class Bouncer extends ImageView {
     private static final String BOUNCER_IMAGE = "ball.gif";
-    private int myXDirection;
-    private int myYDirection;
     private int myXSpeed;
     private int myYSpeed;
-    private int mySpeed;
     private GameDifficulty myCurrentMode;
 
 
+    /**
+     * Bouncer class creates an object with the ball.gif image
+     * The bouncer checks for its own collisions with the other objects in the scene
+     * such as the paddle, the bricks and the wall
+     * This constructor initializes a Beginning Mode Bouncer
+     * @param scene
+     */
     public Bouncer(Scene scene){
         this(scene, new GameDifficulty(GameDifficulty.BEGINNING_MODE));
     }
 
+    /**
+     * Bouncer class creates an object with the ball.gif image
+     * Bouncer checks for its own collisions with the other objects in the scene
+     * The currentMode determines the Bouncer's starting and max velocities
+     * More difficult modes have faster moving bouncers
+     * @param scene
+     * @param currentMode
+     */
     public Bouncer(Scene scene, GameDifficulty currentMode) {
         super(new Image(BOUNCER_IMAGE));
         myCurrentMode = currentMode;
@@ -32,6 +44,17 @@ public class Bouncer extends ImageView {
         setY(scene.getHeight() * 0.6D);
     }
 
+    /**
+     * This method updates the Bouncer's position by computing new position from current position and velocity
+     * This method also handles Bouncer's collisions with all other objects in the scene
+     * These include walls, paddles, bricks
+     * @param elapsedTime
+     * @param scene
+     * @param paddle
+     * @param bricks
+     * @param root
+     * @return the bricks that the Bouncer collided with so they can be handled by the BrickManager
+     */
     public List<GenericBrick> handleBouncerCollisions(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
                                                       Group root){
         updatePosition(elapsedTime);
@@ -50,14 +73,10 @@ public class Bouncer extends ImageView {
             GenericBrick brick = iterator.next();
             if (bouncerCollidesWithTop(this,brick) || bouncerCollidesWithBottom(this,brick)){
                 effectedBricks.add(brick);
-//                root.getChildren().removeAll(brick);
-//                iterator.remove();
                 bounceInYDirection = true;
             }
             if (bouncerCollidesWithLeft(this,brick) || bouncerCollidesWithRight(this,brick)){
                 effectedBricks.add(brick);
-//                root.getChildren().removeAll(brick);
-//                iterator.remove();
                 bounceInXDirection = true;
             }
         }
@@ -110,6 +129,12 @@ public class Bouncer extends ImageView {
     }
 
 
+    /**
+     * Handles the Bouncer's collisions with paddles by determining if they collide and changing the
+     * velocity accordingly. Implements the physics of how Bouncer's speed is affected by the Paddle's speed.
+     * Ensures Bouncer's velocity does not exceed the maximum for the current difficulty mode.
+     * @param paddle
+     */
     public void handlePaddleCollisions(Paddle paddle) {
         if (bouncerCollidesWithTop(this, paddle)){
             this.myXSpeed += paddle.getMyVelocity() / 2;
@@ -143,18 +168,26 @@ public class Bouncer extends ImageView {
         }
     }
 
-    public int getMyXSpeed() {
-        return myXSpeed;
-    }
-
+    /**
+     * Getter for Bouncer speed in Y direction
+     * @return myYSpeed
+     */
     public int getMyYSpeed() {
         return myYSpeed;
     }
 
+    /**
+     * Setter for Bouncer speed in X direction
+     * @param myXSpeed
+     */
     public void setMyXSpeed(int myXSpeed) {
         this.myXSpeed = myXSpeed;
     }
 
+    /**
+     * Setter for Bouncer speed in Y direction
+     * @param myYSpeed
+     */
     public void setMyYSpeed(int myYSpeed) {
         this.myYSpeed = myYSpeed;
     }
