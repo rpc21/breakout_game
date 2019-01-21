@@ -2,9 +2,12 @@ package example;
 
 import javafx.stage.Stage;
 
+/**
+ * Class to handle all the scene changes and to initialize the application
+ */
 public class StageManager {
 
-    public static final String TITLE = "Ryan Culhane Game";
+    private static final String TITLE = "Ryan Culhane Game";
 
     private MainScreen mainScreen;
     private PauseScreen pauseScreen;
@@ -15,7 +18,10 @@ public class StageManager {
     private GameLevel gameLevel;
 
 
-
+    /**
+     * StageManager Constructor
+     * @param stage
+     */
     public StageManager(Stage stage) {
         this.mainScreen = new MainScreen(this);
         this.gameLevel = new GameLevel(this,1,GameDifficulty.BEGINNING_MODE);
@@ -27,6 +33,11 @@ public class StageManager {
         stage.setScene(currentScreen.getMyScene());
     }
 
+    /**
+     * Switches from the current screen to display the new screen that is passed to it
+     * Updates the Stage Manager to know what screen is currently being displayed
+     * @param newScene
+     */
     public void switchScene(GenericScreen newScene){
         stage.setScene(newScene.getMyScene());
         stage.setTitle(TITLE);
@@ -37,30 +48,42 @@ public class StageManager {
         }
     }
 
+    /**
+     * Getter for a fully initialized MainScreen
+     * @return
+     */
     public MainScreen getMainScreen() {
         return mainScreen;
     }
 
+    /**
+     * Getter for an up to date PauseScreen
+     * @return
+     */
     public PauseScreen getPauseScreen() {
         return pauseScreen;
     }
 
-    public CheatKeyMode getCheatKeyMode() {
-        return cheatKeyMode;
-    }
-
-    public TutorialMode getTutorialMode() {
-        return tutorialMode;
-    }
-
+    /**
+     * Getter for the current screen
+     * @return the current screen being displayed
+     */
     public GenericScreen getCurrentScreen() {
         return currentScreen;
     }
 
+    /**
+     * Getter for the stage
+     * @return stage
+     */
     public Stage getStage(){
         return stage;
     }
 
+    /**
+     * Getter for the current game level - helps maintain and display important parts of game state
+     * @return current gameLevel
+     */
     public GameLevel getGameLevel() {
         return gameLevel;
     }
