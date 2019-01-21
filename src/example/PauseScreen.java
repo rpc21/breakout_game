@@ -8,6 +8,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
+/**
+ * Screen that gives information about the state of the level
+ * Allows player to change levels and use cheat keys
+ */
 public class PauseScreen extends GenericScreen {
 
     private final String PAUSE_SCREEN_TEXTS = "'L' - add another life\n" +
@@ -35,13 +39,21 @@ public class PauseScreen extends GenericScreen {
 
     private GameLevel myCurrentLevel;
 
+    /**
+     * PauseScreen constructor
+     * @param stageManager
+     */
     public PauseScreen(StageManager stageManager){
         this(stageManager, stageManager.getGameLevel());
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
     }
 
-
+    /**
+     * PauseScreen constructor
+     * @param stageManager
+     * @param currentLevel
+     */
     public PauseScreen(StageManager stageManager, GameLevel currentLevel){
         this.myStageManager = stageManager;
         myCurrentLevel = currentLevel;
@@ -90,19 +102,13 @@ public class PauseScreen extends GenericScreen {
             myStageManager.switchScene(myStageManager.getGameLevel());
         }
         if (code == KeyCode.L){
-            myCurrentLevel.setMyNumberOfLivesRemaining(myCurrentLevel.getMyNumberOfLivesRemaining() + 1);
-            myNumberOfLivesRemainingToDisplay.setText("Number of Lives Remaining: "+myCurrentLevel.getMyNumberOfLivesRemaining());
-            actionCompleteText.setText("Added another life!");
+            addLife();
         }
         if (code == KeyCode.R){
-            myStageManager.switchScene(new GameLevel(myStageManager, myCurrentLevel.getMyLevelNumber(),
-                    myCurrentLevel.getCurrentMode().getMyCurrentMode()));
+            resetLevel(myCurrentLevel.getMyLevelNumber());
         }
         if (code == KeyCode.T){
-            myCurrentLevel.setTimeRemaining(Double.MAX_VALUE);
-            myAmountOfTimeRemainingToDisplay.setText("Infinite Time (Practically)");
-            actionCompleteText.setText("Increased time limit!");
-
+            increaseTimeRemaining();
         }
         if (code == KeyCode.DIGIT1){
             myStageManager.switchScene(new GameLevel(myStageManager,1,myCurrentLevel.getCurrentMode().getMyCurrentMode()));
@@ -119,21 +125,33 @@ public class PauseScreen extends GenericScreen {
         if (code == KeyCode.B){
             myCurrentLevel.setCurrentMode(new GameDifficulty(GameDifficulty.BEGINNING_MODE));
             actionCompleteText.setText("Changed to beginning mode, changes will take effect when you begin new level");
-//            myStageManager.switchScene(new GameLevel(myStageManager,myCurrentLevel.getMyLevelNumber(),
-//                    GameDifficulty.BEGINNING_MODE));
         }
         if (code == KeyCode.I){
             myCurrentLevel.setCurrentMode(new GameDifficulty(GameDifficulty.INTERMEDIATE_MODE));
             actionCompleteText.setText("Changed to intermediate mode, changes will take effect when you begin new " +
                     "level");
-//            myStageManager.switchScene(new GameLevel(myStageManager,myCurrentLevel.getMyLevelNumber(),GameDifficulty.INTERMEDIATE_MODE));
         }
         if (code == KeyCode.A){
             myCurrentLevel.setCurrentMode(new GameDifficulty(GameDifficulty.ADVANCED_MODE));
             actionCompleteText.setText("Changed to advanced mode, changes will take effect when you begin new level");
-//            myStageManager.switchScene(new GameLevel(myStageManager,myCurrentLevel.getMyLevelNumber(),
-//                    GameDifficulty.ADVANCED_MODE));
         }
+    }
+
+    private void increaseTimeRemaining() {
+        myCurrentLevel.setTimeRemaining(Double.MAX_VALUE);
+        myAmountOfTimeRemainingToDisplay.setText("Infinite Time (Practically)");
+        actionCompleteText.setText("Increased time limit!");
+    }
+
+    private void resetLevel(int myLevelNumber) {
+        myStageManager.switchScene(new GameLevel(myStageManager, myLevelNumber,
+                myCurrentLevel.getCurrentMode().getMyCurrentMode()));
+    }
+
+    private void addLife() {
+        myCurrentLevel.setMyNumberOfLivesRemaining(myCurrentLevel.getMyNumberOfLivesRemaining() + 1);
+        myNumberOfLivesRemainingToDisplay.setText("Number of Lives Remaining: "+myCurrentLevel.getMyNumberOfLivesRemaining());
+        actionCompleteText.setText("Added another life!");
     }
 
 }

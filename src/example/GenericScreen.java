@@ -8,24 +8,33 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+/**
+ * Defines the basic functionality for any screen displayed to the user in the application
+ * Sub-classes: CheatKeyMode, GameLevel, GenericScreen, MainScreen, PauseScreen, TutorialMode
+ */
 public class GenericScreen {
 
-    protected final String TITLE = "Ryan Culhane Game";
     public static final int SIZE = 500;
     public static final Paint BACKGROUND = Color.AZURE;
-    protected final String BOUNCER_IMAGE = "ball.gif";
-    protected final int BOUNCER_SPEED = 40;
     protected final String PADDLE_IMAGE = "paddle.gif";
 
     protected StageManager myStageManager;
     protected Stage myStage;
     protected Scene myScene;
 
+    /**
+     * GenericScreen default constructor
+     */
     public GenericScreen(){
         setUpScene(SIZE,SIZE,BACKGROUND);
         this.myStage = null;
     }
 
+    /**
+     * GenericScreen constructor
+     * Sets up the scene and sets the stage and the StageManager
+     * @param stageManager
+     */
     public GenericScreen(StageManager stageManager){
         this.myStageManager = stageManager;
         this.myStage = myStageManager.getStage();
@@ -33,6 +42,10 @@ public class GenericScreen {
 
     }
 
+    /**
+     * Getter for myScene
+     * @return myScene
+     */
     public Scene getMyScene() {
         return this.myScene;
     }

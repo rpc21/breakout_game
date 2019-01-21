@@ -9,15 +9,20 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to handle the power-ups
+ * This includes the power-up functionality and how they are invoked
+ * This class also include animation surrounding power-ups
+ */
 public class PowerUpManager {
 
-    public static final double EXTRA_LONG_PADDLE_SIZE = 1.5;
-    public static final int BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP = 15;
+    private static final double EXTRA_LONG_PADDLE_SIZE = 1.5;
+    private static final int BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP = 15;
     public static final int EXTRA_PADDLE_POWERUP_NUMBER = 0;
     public static final int SELECT_AND_DESTROY_POWERUP_NUMBER = 1;
     public static final int BALL_DROPPER_POWERUP_NUMBER = 2;
     public static final int LONG_PADDLE_POWERUP_NUMBER =3;
-    public static final double POWERUP_LIFETIME = 10.0D;
+    private static final double POWERUP_LIFETIME = 10.0D;
 
 
     private int[] myAvailablePowerUps;
@@ -35,6 +40,14 @@ public class PowerUpManager {
     private boolean inDestroyMode;
     private boolean inBallDropperMode;
 
+    /**
+     * PowerUpManager Constructor
+     * Initializes possible power-ups and gain information about current game objects
+     * @param root
+     * @param gamePaddle
+     * @param gameBouncer
+     * @param brickManager
+     */
     public PowerUpManager(Group root, Paddle gamePaddle, Bouncer gameBouncer, BrickManager brickManager){
         this.root = root;
         myDisplay = new HBox(10.0);
@@ -72,6 +85,10 @@ public class PowerUpManager {
         }
     }
 
+    /**
+     * Displays the keys used to trigger power ups and the number of power-ups of each kind
+     * that the player has available to them
+     */
     public void displayStateOfPowerUps(){
         myDisplay.getChildren().clear();
         Text extraPaddlesRemaining = new Text("E:"+myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER]);
@@ -86,41 +103,62 @@ public class PowerUpManager {
 
     }
 
+    /**
+     * Adds another power-up of the specified kind to the power-ups the user has
+     * @param powerUpNumber
+     */
     public void addPowerUp(int powerUpNumber){
         if(powerUpNumber >= 0 && powerUpNumber <= 3){
             myAvailablePowerUps[powerUpNumber] = myAvailablePowerUps[powerUpNumber] + 1;
         }
     }
 
+    /**
+     * Invokes the power-up
+     * @param powerUpNumber
+     */
     public void usePowerUp(int powerUpNumber){
         if(powerUpNumber == EXTRA_PADDLE_POWERUP_NUMBER && myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] > 0){
-            myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] - 1;
-            myExtraPaddleTimeRemaining = POWERUP_LIFETIME;
-//            myExtraPaddle = new Paddle(root.getScene(), myGamePaddle);
-            myExtraPaddle.setX(myGamePaddle.getX() + root.getScene().getWidth()/2);
-            myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
-            if (!root.getChildren().contains(myExtraPaddle)){
-                root.getChildren().add(myExtraPaddle);
-            }
+            useExtraPaddlePowerUp();
         }
         else if(powerUpNumber == SELECT_AND_DESTROY_POWERUP_NUMBER && myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] > 0){
-            myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] =
-                    myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] - 1;
-            inDestroyMode = true;
-            root.getScene().setOnMouseClicked(e -> handleMouseClick(e.getX(), e.getY()));
-
+            useSelectAndDestroyPowerUp();
         }
         else if (powerUpNumber == BALL_DROPPER_POWERUP_NUMBER && myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] > 0){
-            myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] = myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] - 1;
-            resetMyBouncerDrop();
-            root.getChildren().addAll(myBouncerDrop);
-            inBallDropperMode = true;
-
+            useBouncerDropperPowerUp();
         }
         else if (powerUpNumber == LONG_PADDLE_POWERUP_NUMBER && myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] > 0){
-            myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] - 1;
-            myLongPaddleTimeRemaining = POWERUP_LIFETIME;
-            myGamePaddle.setFitWidth(myStandardPaddleSize*EXTRA_LONG_PADDLE_SIZE);
+            useLongPaddlePowerUp();
+        }
+    }
+
+    private void useLongPaddlePowerUp() {
+        myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[LONG_PADDLE_POWERUP_NUMBER] - 1;
+        myLongPaddleTimeRemaining = POWERUP_LIFETIME;
+        myGamePaddle.setFitWidth(myStandardPaddleSize*EXTRA_LONG_PADDLE_SIZE);
+    }
+
+    private void useBouncerDropperPowerUp() {
+        myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] = myAvailablePowerUps[BALL_DROPPER_POWERUP_NUMBER] - 1;
+        resetMyBouncerDrop();
+        root.getChildren().addAll(myBouncerDrop);
+        inBallDropperMode = true;
+    }
+
+    private void useSelectAndDestroyPowerUp() {
+        myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] =
+                myAvailablePowerUps[SELECT_AND_DESTROY_POWERUP_NUMBER] - 1;
+        inDestroyMode = true;
+        root.getScene().setOnMouseClicked(e -> handleMouseClick(e.getX(), e.getY()));
+    }
+
+    private void useExtraPaddlePowerUp() {
+        myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] - 1;
+        myExtraPaddleTimeRemaining = POWERUP_LIFETIME;
+        myExtraPaddle.setX(myGamePaddle.getX() + root.getScene().getWidth()/2);
+        myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
+        if (!root.getChildren().contains(myExtraPaddle)){
+            root.getChildren().add(myExtraPaddle);
         }
     }
 
@@ -161,27 +199,39 @@ public class PowerUpManager {
 
     }
 
+    /**
+     * Handles animation of power-ups
+     * @param elapsedTime
+     */
     public void updatePowerUpStatus(double elapsedTime){
+        updateExtraPaddleStatus(elapsedTime);
+        updateLongPaddlePowerUpStatus(elapsedTime);
+    }
+
+    private void updateLongPaddlePowerUpStatus(double elapsedTime) {
+        if (myGamePaddle.getLayoutBounds().getWidth() != myStandardPaddleSize && myLongPaddleTimeRemaining <= 0){
+            myGamePaddle.setFitWidth((myStandardPaddleSize));
+        }
+        myLongPaddleTimeRemaining -= elapsedTime;
+    }
+
+    private void updateExtraPaddleStatus(double elapsedTime) {
         if (root.getChildren().contains(myExtraPaddle) && myExtraPaddleTimeRemaining <= 0){
             root.getChildren().remove(myExtraPaddle);
         }
         myExtraPaddle.updatePaddlePosition(elapsedTime, root.getScene());
         myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
-//        System.out.println(myGamePaddle.getMyVelocity() +" "+ myExtraPaddle.getMyVelocity());
         if (root.getChildren().contains(myExtraPaddle) && myExtraPaddleTimeRemaining > 0) {
             myGameBouncer.handlePaddleCollisions(myExtraPaddle);
         }
         myExtraPaddleTimeRemaining -= elapsedTime;
-
-
-        if (myGamePaddle.getLayoutBounds().getWidth() != myStandardPaddleSize && myLongPaddleTimeRemaining <= 0){
-            myGamePaddle.setFitWidth((myStandardPaddleSize));
-        }
-        myLongPaddleTimeRemaining -= elapsedTime;
-
-
     }
 
+    /**
+     * Handles the animation for BouncerDropper power-up
+     * Needs to be separate because it is in a time-stopped game state
+     * @param elapsedTime
+     */
     public void handleBallDropperMode(double elapsedTime) {
         if (isInBallDropperMode()){
             if (!getMyBouncerDrop().isEmpty()){
@@ -194,7 +244,10 @@ public class PowerUpManager {
         }
     }
 
-
+    /**
+     * Causes extra paddle to respond to arrow keys
+     * @param code
+     */
     public void handleKeyInput(KeyCode code) {
         if (code == KeyCode.RIGHT) {
             myExtraPaddle.increaseVelocity();
@@ -204,27 +257,44 @@ public class PowerUpManager {
         }
     }
 
+    /**
+     * Makes PowerUpManager recognize when the Bouncer and Paddle get reset
+     * @param myBouncer
+     * @param myPaddle
+     */
     public void resetPowerUpManager(Bouncer myBouncer, Paddle myPaddle) {
         myGameBouncer = myBouncer;
         myGamePaddle = myPaddle;
     }
 
+    /**
+     * Getter for whether game should be in time-stopped destroy mode
+     * @return inDestroyMode
+     */
     public boolean isInDestroyMode() {
         return inDestroyMode;
     }
 
-    public void setInDestroyMode(boolean inDestroyMode) {
-        this.inDestroyMode = inDestroyMode;
-    }
-
+    /**
+     * Getter for whether game should be in time-stopped BouncerDropper mode
+     * @return inBallDropperMode
+     */
     public boolean isInBallDropperMode() {
         return inBallDropperMode;
     }
 
+    /**
+     * Setter for whether game should be in time-stopped BouncerDropper mode
+     * @param inBallDropperMode
+     */
     public void setInBallDropperMode(boolean inBallDropperMode) {
         this.inBallDropperMode = inBallDropperMode;
     }
 
+    /**
+     * Gets the Bouncers for the bouncer drop animation
+     * @return myBouncerDrop
+     */
     public ArrayList<Bouncer> getMyBouncerDrop() {
         return myBouncerDrop;
     }

@@ -1,7 +1,6 @@
 package example;
 
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -14,13 +13,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 public class MainScreen extends GenericScreen{
 
-    public static final double SIZE_TO_VBOX_PADDING_RATIO = 40.0;
+    private static final double SIZE_TO_VBOX_PADDING_RATIO = 40.0;
     private Rectangle welcomeScreenBackground;
     private Button playGameButton;
     private Button playTutorialButton;
@@ -31,8 +29,10 @@ public class MainScreen extends GenericScreen{
     private VBox myVBox;
 
 
-
-
+    /**
+     * MainScreen default constructor
+     * @param stageManager
+     */
     public MainScreen(StageManager stageManager){
         super(stageManager);
     }
