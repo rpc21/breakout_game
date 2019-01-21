@@ -8,8 +8,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
+
+/**
+ * CheatKeyMode is a class that displays a screen with all the Cheat Keys on it and how to use them
+ */
 public class CheatKeyMode extends GenericScreen{
 
     private final int SIZE = 500;
@@ -25,10 +28,18 @@ public class CheatKeyMode extends GenericScreen{
 
     private Scene myScene;
 
+    /**
+     * Getter for myScene
+     * @return myScene
+     */
     public Scene getMyScene() {
         return myScene;
     }
 
+    /**
+     * Initialize the Cheat Key Screen
+     * @param stageManager
+     */
     public CheatKeyMode(StageManager stageManager) {
         super(stageManager);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));

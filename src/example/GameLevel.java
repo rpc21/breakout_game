@@ -12,9 +12,15 @@ import javafx.scene.text.TextAlignment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to handle all the game play
+ * Class initializes all parts of the different levels
+ * Determines when a level is over
+ * Handles game play animation and logic
+ * Displays messages to the user about power-ups, game state, and how to play
+ */
 public class GameLevel extends GenericScreen{
 
-    public static final String BOUNCER_IMAGE = "ball.gif";
     public static final Paint BACKGROUND = Color.AZURE;
     public static final int SIZE = 500;
     public static final double BOTTOM_LINE_DISPLAY_LOCATION = 0.95;
@@ -25,7 +31,7 @@ public class GameLevel extends GenericScreen{
     private int playerScore;
     private double timeRemaining;
     private GameDifficulty currentMode;
-    protected Bouncer myBouncer;
+    private Bouncer myBouncer;
     private Paddle myPaddle;
     private StageManager myStageManager;
     private Scene myScene;
@@ -33,12 +39,12 @@ public class GameLevel extends GenericScreen{
     private Group root;
     private int myLevelNumber;
     private BrickManager myBrickManager;
-    protected HBox topLineDisplay;
-    protected HBox bottomLineDisplay;
-    protected Text importantMessages;
-    protected Text scoreText;
-    protected Text timeText;
-    protected Text livesRemainingText;
+    private HBox topLineDisplay;
+    private HBox bottomLineDisplay;
+    private Text importantMessages;
+    private Text scoreText;
+    private Text timeText;
+    private Text livesRemainingText;
     private boolean activeGameMode;
     private PowerUpManager myPowerUpManager;
 
@@ -47,16 +53,23 @@ public class GameLevel extends GenericScreen{
         return myScene;
     }
 
+    /**
+     * Generic Constructor
+     */
     public GameLevel(){
         super();
     }
 
-    public GameLevel(GameLevel currentLevel) {
-        this(currentLevel.getMyStageManager(),currentLevel.getMyLevelNumber(), currentLevel.getCurrentMode().getMyCurrentMode());
-    }
-
-
-
+    /**
+     * GameLevel constructor
+     * Sets StageManager, difficulty mode, level number
+     * Creates BrickManager and PowerUpManager for the level
+     * Initializes all elements of the level including Bouncer, Paddle, Bricks
+     * Displays the start state of the level, waits for user action for animation to begin
+     * @param stageManager
+     * @param levelNumber
+     * @param gameDifficulty
+     */
     public GameLevel(StageManager stageManager, int levelNumber, int gameDifficulty){
         myStageManager = stageManager;
         System.out.println(myStageManager + "is the stageManager in GameLevel");
@@ -71,7 +84,7 @@ public class GameLevel extends GenericScreen{
         myPowerUpManager = new PowerUpManager(root, myPaddle, myBouncer, myBrickManager);
     }
 
-    protected void setUpLevel() {
+    private void setUpLevel() {
         // create one top level collection to organize the things in the scene
         root = new Group();
         // create a place to see the shapes
@@ -92,19 +105,13 @@ public class GameLevel extends GenericScreen{
         root.getChildren().add(bottomLineDisplay);
         root.getChildren().add(topLineDisplay);
 
-        System.out.println("Reached past adding the children");
-
         createKeyBindings(scene);
 
-
-        // respond to input, the e gives a name to the event that happened so you can get the info
-//        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-//        scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
         myScene = scene;
 
     }
 
-    protected void initializeTopLineDisplay(Scene scene) {
+    private void initializeTopLineDisplay(Scene scene) {
         topLineDisplay = new HBox(10.0D);
         scoreText = new Text("Score: "+playerScore);
         timeText = new Text("Time Remaining: "+ ((int) timeRemaining)+" seconds");
@@ -113,7 +120,7 @@ public class GameLevel extends GenericScreen{
         centerHBoxText(topLineDisplay, scene.getHeight()* TOP_LINE_DISPLAY_LOCATION, scene);
     }
 
-    protected void initializeBottomLine(Scene scene) {
+    private void initializeBottomLine(Scene scene) {
         bottomLineDisplay = new HBox(10.0D);
         importantMessages = new Text("Press ENTER to Set bouncer in Motion");
         bottomLineDisplay.getChildren().add(importantMessages);
@@ -126,22 +133,28 @@ public class GameLevel extends GenericScreen{
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     }
 
-    protected void generateBricks(Scene scene) {
-        System.out.println("Reach generate Bricks");
+    private void generateBricks(Scene scene) {
         myBricks = myBrickManager.getMyBricks();
 
     }
 
-    protected void initializeBouncer(Scene scene){
+    private void initializeBouncer(Scene scene){
         System.out.println("Raeched initialize Bouncer");
         myBouncer = new Bouncer(scene, currentMode);
     }
 
-    protected void initializePaddle(Scene scene){
+    private void initializePaddle(Scene scene){
         System.out.println("Reached initialize Paddle");
         myPaddle = new Paddle(scene);
     }
 
+    /**
+     * Handles the animation of the level
+     * Allows for pausing based on whether the game is in a moment where time needs to freeze or behave
+     * differently based on what powerups are being used
+     * Updates all important aspects of the level
+     * @param elapsedTime
+     */
     @Override
     protected void step (double elapsedTime) {
         // update attributes
@@ -306,81 +319,66 @@ public class GameLevel extends GenericScreen{
 
     }
 
-    private void exitDestroyMode() {
-        if (myPowerUpManager.isInDestroyMode()){
-            myPowerUpManager.setInDestroyMode(false);
-            activeGameMode = true;
-        }
-    }
-
+    /**
+     * Getter for number of LivesRemaining
+     * @return myNumberOfLivesRemaining
+     */
     public int getMyNumberOfLivesRemaining() {
         return myNumberOfLivesRemaining;
     }
 
+    /**
+     * Setter for number of LivesRemaining
+     * @param myNumberOfLivesRemaining
+     */
     public void setMyNumberOfLivesRemaining(int myNumberOfLivesRemaining) {
         this.myNumberOfLivesRemaining = myNumberOfLivesRemaining;
     }
 
+    /**
+     * Getter for playerScore
+     * @return playerScore
+     */
     public int getPlayerScore() {
         return playerScore;
     }
 
-    public void setPlayerScore(int playerScore) {
-        this.playerScore = playerScore;
-    }
-
+    /**
+     * Getter for timeRemaining
+     * @return timeRemaining
+     */
     public double getTimeRemaining() {
         return timeRemaining;
     }
 
+    /**
+     * Setter for TimeRemaining
+     * @param timeRemaining
+     */
     public void setTimeRemaining(double timeRemaining) {
         this.timeRemaining = timeRemaining;
     }
 
+    /**
+     * Getter for current game difficulty mode
+     * @return currentMode
+     */
     public GameDifficulty getCurrentMode() {
         return currentMode;
     }
 
+    /**
+     * Setter for current game difficulty mode
+     * @param currentMode
+     */
     public void setCurrentMode(GameDifficulty currentMode) {
         this.currentMode = currentMode;
     }
 
-    public Bouncer getMyBouncer() {
-        return myBouncer;
-    }
-
-    public void setMyBouncer(Bouncer myBouncer) {
-        this.myBouncer = myBouncer;
-    }
-
-    public Paddle getMyPaddle() {
-        return myPaddle;
-    }
-
-    public void setMyPaddle(Paddle myPaddle) {
-        this.myPaddle = myPaddle;
-    }
-
-    public StageManager getMyStageManager() {
-        return myStageManager;
-    }
-
-    public void setMyStageManager(StageManager myStageManager) {
-        this.myStageManager = myStageManager;
-    }
-
-    public void setMyScene(Scene myScene) {
-        this.myScene = myScene;
-    }
-
-    public ArrayList<GenericBrick> getMyBricks() {
-        return myBricks;
-    }
-
-    public void setMyBricks(ArrayList<GenericBrick> myBricks) {
-        this.myBricks = myBricks;
-    }
-
+    /**
+     * Getter for current level number
+     * @return myLevelNumber
+     */
     public int getMyLevelNumber() {
         return myLevelNumber;
     }
