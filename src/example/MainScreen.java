@@ -100,7 +100,7 @@ public class MainScreen extends GenericScreen{
         myButtons.add(playGameButton);
 
 
-        playTutorialButton = new Button("Play Tutorial");
+        playTutorialButton = new Button("Tutorial");
         playTutorialButton.setOnAction(e -> {
             myStageManager.switchScene(new TutorialMode(myStageManager));
         });

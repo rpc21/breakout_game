@@ -150,29 +150,26 @@ public class GameLevel extends GenericScreen{
             myPaddle.updatePaddlePosition(elapsedTime,myScene);
             List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
                     root);
-            int powerUpToHandle = myBrickManager.handleEffectedBricks(effectedBricks, root);
-            if (isValidPowerUpNumber(powerUpToHandle)){
-                handlePowerUp(powerUpToHandle);
-            }
+            cleanUpBricksAndCollectPowerUps(effectedBricks);
             myPowerUpManager.updatePowerUpStatus(elapsedTime);
 
             handleLifeLoss();
             handleEndOfGame();
         }
-        if (myPowerUpManager.isInBallDropperMode()){
-            if (!myPowerUpManager.getMyBouncerDrop().isEmpty()){
-                myPowerUpManager.updateBouncerDropBouncers(elapsedTime);
-            }
-            else {
-                myPowerUpManager.setInBallDropperMode(false);
-            }
-
-        }
+        myPowerUpManager.handleBallDropperMode(elapsedTime);
         playerScore = myBrickManager.getMyScore();
         centerHBoxText(bottomLineDisplay, myScene.getHeight()* BOTTOM_LINE_DISPLAY_LOCATION, myScene);
         updateTopLine();
         myPowerUpManager.displayStateOfPowerUps();
     }
+
+    private void cleanUpBricksAndCollectPowerUps(List<GenericBrick> effectedBricks) {
+        int powerUpToHandle = myBrickManager.handleEffectedBricks(effectedBricks, root);
+        if (isValidPowerUpNumber(powerUpToHandle)){
+            handlePowerUp(powerUpToHandle);
+        }
+    }
+
 
     private void handlePowerUp(int powerUpToHandle) {
         if (powerUpToHandle == 4){

@@ -124,7 +124,7 @@ public class PowerUpManager {
         }
     }
 
-    public void updateBouncerDropBouncers(double elapsedTime) {
+    private void updateBouncerDropBouncers(double elapsedTime) {
         List<Bouncer> bouncersToBeRemoved = new ArrayList<>();
         List<GenericBrick> bricksToBeRemoved = new ArrayList<>();
         for (Bouncer bouncer : myBouncerDrop){
@@ -180,6 +180,18 @@ public class PowerUpManager {
         myLongPaddleTimeRemaining -= elapsedTime;
 
 
+    }
+
+    public void handleBallDropperMode(double elapsedTime) {
+        if (isInBallDropperMode()){
+            if (!getMyBouncerDrop().isEmpty()){
+                updateBouncerDropBouncers(elapsedTime);
+            }
+            else {
+                setInBallDropperMode(false);
+            }
+
+        }
     }
 
 

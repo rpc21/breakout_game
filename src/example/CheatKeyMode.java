@@ -14,12 +14,12 @@ public class CheatKeyMode extends GenericScreen{
 
     private final int SIZE = 500;
     private final Paint BACKGROUND = Color.AZURE;
-    private final String CHEAT_KEY_DESCRIPTIONS = "'L' - add another life\n" +
-                                                    "'R' - reset the level\n" +
-                                                    "'T' - give infinite time\n" +
-                                                    "'D' - Destroy any block by clicking on it\n" +
-                                                    "# keys - Jump to level of that number\n" +
-                                                    "'P' - gain access to all power ups\n"+
+    private final String CHEAT_KEY_DESCRIPTIONS = "'L' - add another life (only accessible from splash screen)\n" +
+                                                    "'R' - reset the level (only accessible from splash screen)\n" +
+                                                    "'T' - give infinite time (only accessible from splash screen)\n" +
+                                                    "# keys - Jump to level of that number (only accessible from " +
+                                                    "splash screen)\n" +
+                                                    "'P' - gain access to all power ups (accessible in level)\n"+
                                                     "BACKSPACE always will return to the start menu";
 
 

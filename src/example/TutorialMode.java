@@ -56,6 +56,7 @@ public class TutorialMode extends GenericScreen{
     private ThreeHitBrick myThreeHitBrick;
     private TwoHitBrick myTwoHitBrick;
     private OneHitBrick myOneHitBrick;
+    private PowerUpManager myPowerUpManager;
 
 
 
@@ -66,6 +67,7 @@ public class TutorialMode extends GenericScreen{
         setUpScene(GenericScreen.SIZE,GenericScreen.SIZE,GenericScreen.BACKGROUND);
         initializePossibleObjects();
         initializeObjectsForTutorialNumber();
+        myPowerUpManager = new PowerUpManager(root,myPaddle,myBouncer,new BrickManager(1));
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         myScene.setOnMouseClicked(e -> handleMouseClicked());
     }
@@ -183,11 +185,27 @@ public class TutorialMode extends GenericScreen{
 
         }
         else if (myTutorialNumber == 9){
+            tutorialInstructionsText.setText("You may get a power-up that will add an extra life or more time.\n"+
+                    "These power-ups will be automatically handled.");
 
         }
         else if (myTutorialNumber == 10){
+            tutorialInstructionsText.setText("For other power-ups, you decide when to use them.\n"+
+                    "'E' will let you control two paddles at once for 10 seconds.\n"+
+                    "'L' will let you control an extra long paddle for 10 seconds.\n"+
+                    "'B' will drop bouncers from the top of the screen and destroy the top row of bricks.\n"+
+                    "'D' will pause the game and let you click on any brick to destroy it.\n"+
+                    "Bricks destroyed using power-ups will not cause you to lose any lives.\n"+
+                    "You can see your available power-ups and how to access them in the top left corner of a level.");
 
+        }else if (myTutorialNumber == 11){
+            tutorialInstructionsText.setText("Before starting a level a splash screen will appear.\n"+
+                    "The splash screen will also appear if you press SPACE during a level.\n"+
+                    "From the splash screen a player can use cheat keys to change levels, add lives, etc.\n"+
+                    "Press SPACE to see what the splash screen looks like and start playing!");
+            navigationInstructionsText.setText("Press SPACE to exit tutorial and start playing!");
         }
+
 
     }
 
@@ -205,21 +223,25 @@ public class TutorialMode extends GenericScreen{
 
     @Override
     protected void step (double elapsedTime) {
-        centerHBoxText(myHBoxTop, myScene.getHeight()* TOP_HBOX_DISPLAY_HEIGHT, myScene);
-        centerHBoxText(myHBoxBottom, myScene.getHeight()* BOTTOM_HBOX_DISPLAY_HEIGHT, myScene);
-        centerHBoxText(myHBoxCenter, myScene.getHeight()* CENTER_HBOX_DISPLAY_HEIGHT, myScene);
-        myPaddle.updatePaddlePosition(elapsedTime, myScene);
-        if (myTutorialNumber == 1 &&
-                (myPaddle.getMyVelocity() == Paddle.MAX_PADDLE_VELOCITY || myPaddle.getMyVelocity() == Paddle.MIN_PADDLE_VELOCITY)){
-            tutorialInstructionsText.setText("That is as fast as the paddle can go!");
-        }else if (myTutorialNumber == 1){
-            tutorialInstructionsText.setText("You can change the paddle's speed with the left or right arrows, try " +
-                    "it!");
+        if (!myPowerUpManager.isInBallDropperMode()) {
+            centerHBoxText(myHBoxTop, myScene.getHeight() * TOP_HBOX_DISPLAY_HEIGHT, myScene);
+            centerHBoxText(myHBoxBottom, myScene.getHeight() * BOTTOM_HBOX_DISPLAY_HEIGHT, myScene);
+            centerHBoxText(myHBoxCenter, myScene.getHeight() * CENTER_HBOX_DISPLAY_HEIGHT, myScene);
+            myPaddle.updatePaddlePosition(elapsedTime, myScene);
+            if (myTutorialNumber == 1 &&
+                    (myPaddle.getMyVelocity() == Paddle.MAX_PADDLE_VELOCITY || myPaddle.getMyVelocity() == Paddle.MIN_PADDLE_VELOCITY)) {
+                tutorialInstructionsText.setText("That is as fast as the paddle can go!");
+            } else if (myTutorialNumber == 1) {
+                tutorialInstructionsText.setText("You can change the paddle's speed with the left or right arrows, try " +
+                        "it!");
+            }
+            myBouncer.handleBouncerCollisions(elapsedTime, myScene, myPaddle, new ArrayList<>(), root);
+            if (myBouncer.getY() >= myPaddle.getY()) {
+                resetBouncerAndPaddle();
+            }
+            myPowerUpManager.updatePowerUpStatus(elapsedTime);
         }
-        myBouncer.handleBouncerCollisions(elapsedTime,myScene,myPaddle, new ArrayList<>(), root);
-        if (myBouncer.getY() >= myPaddle.getY()){
-            resetBouncerAndPaddle();
-        }
+        myPowerUpManager.handleBallDropperMode(elapsedTime);
     }
 
     private void resetBouncerAndPaddle() {
@@ -256,6 +278,10 @@ public class TutorialMode extends GenericScreen{
             myBouncer.setMyYSpeed(TUTORIAL_BOUNCER_Y_SPEED);
             myBouncer.setMyXSpeed(TUTORIAL_BOUNCER_X_SPEED);
         }
+        else if (code == KeyCode.SPACE){
+            myStageManager.switchScene(myStageManager.getPauseScreen());
+        }
+
     }
 
     public Scene getMyScene() {
