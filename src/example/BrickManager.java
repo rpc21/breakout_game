@@ -10,16 +10,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * BrickManager class is in charge of managing all the bricks for a level
+ * The BrickManager initializes the bricks for the level by reading in a file in resources folder
+ * The BrickManager also handles the effects of brick collisions such as score updates and power-up
+ * The BrickManager randomly determines what kind of brick is generated and what kind of power-up is distributed
+ * based on the current difficulty mode of the level.
+ */
 public class BrickManager {
 
-    public static final String LEVEL_ONE = "resources/level_one_layout.txt";
-    public static final String LEVEL_TWO = "resources/level_two_layout.txt";
-    public static final String LEVEL_THREE = "resources/level_three_layout.txt";
-    public static final int INVALID_POWER_UP_NUMBER = 589302;
-    public static final double ADVANCED_MODE_POWERUP_RATE = 0.15;
-    public static final double INTERMEDIATE_MODE_POWERUP_RATE = 0.2;
-    public static final double BEGINNING_MODE_POWERUP_RATE = 0.25;
-    public static final int NUMBER_OF_POSSIBLE_POWERUPS = 6;
+    private static final String LEVEL_ONE = "resources/level_one_layout.txt";
+    private static final String LEVEL_TWO = "resources/level_two_layout.txt";
+    private static final String LEVEL_THREE = "resources/level_three_layout.txt";
+    private static final int INVALID_POWER_UP_NUMBER = 589302;
+    private static final double ADVANCED_MODE_POWERUP_RATE = 0.15;
+    private static final double INTERMEDIATE_MODE_POWERUP_RATE = 0.2;
+    private static final double BEGINNING_MODE_POWERUP_RATE = 0.25;
+    private static final int NUMBER_OF_POSSIBLE_POWERUPS = 6;
 
     private File pathToBrickLayout;
     private ArrayList<GenericBrick> myBricks;
@@ -29,14 +36,25 @@ public class BrickManager {
     private int myScore;
     private boolean loseLifeDueToDangerBrick;
 
-    public BrickManager(GameDifficulty currentMode){
-        this(1,currentMode);
-    }
-
+    /**
+     * Creates a new BrickManager, lays out the bricks based on the level number passed to the constructor
+     * Reads in the brick locations from the corresponding file of brick locations
+     * Defaults the current difficulty mode to Beginning
+     * Initializes all bricks for the level
+     * @param levelNumber
+     */
     public BrickManager(int levelNumber){
         this(levelNumber,new GameDifficulty(GameDifficulty.BEGINNING_MODE));
     }
 
+    /**
+     * Creates a new BrickManager, lays out the bricks based on the level number passed to the constructor
+     * Reads in the brick locations from the corresponding file of brick locations
+     * Sets the behavior according the difficulty mode that is passed to the constructor
+     * Initializes all bricks for the level
+     * @param levelNumber
+     * @param currentMode
+     */
     public BrickManager(int levelNumber, GameDifficulty currentMode){
         myScore = 0;
         loseLifeDueToDangerBrick = false;
@@ -50,13 +68,12 @@ public class BrickManager {
         else{
             pathToBrickLayout = new File(LEVEL_ONE);
         }
-        System.out.println("Level Number passed: " + levelNumber);
-        System.out.println("Path to brick layout:"+ pathToBrickLayout);
         myBricks = new ArrayList<>();
         initializeBlocksFromFile();
     }
 
-    public GenericBrick generateBrick(double xPos, double yPos, double brickLength){
+
+    private GenericBrick generateBrick(double xPos, double yPos, double brickLength){
         if (myCurrentMode == GameDifficulty.ADVANCED_MODE){
             return generateAdvancedBrick(xPos, yPos, brickLength);
         }
@@ -70,6 +87,7 @@ public class BrickManager {
 
     }
 
+    // Implements boundaries to set the frequency of generating different kinds of level appropriate bricks
     private GenericBrick generateBeginningBrick(double xPos, double yPos, double brickLength) {
         double randomNumber = Math.random();
         if (randomNumber <= 0.6D){
@@ -83,6 +101,7 @@ public class BrickManager {
         }
     }
 
+    // Implements boundaries to set the frequency of generating different kinds of level appropriate bricks
     private GenericBrick generateIntermediateBrick(double xPos, double yPos, double brickLength) {
         double randomNumber = Math.random();
         if (randomNumber <= 0.4D){
@@ -102,6 +121,7 @@ public class BrickManager {
         }
     }
 
+    // Implements boundaries to set the frequency of generating different kinds of level appropriate bricks
     private GenericBrick generateAdvancedBrick(double xPos, double yPos, double brickLength) {
         double randomNumber = Math.random();
         if (randomNumber <= 0.3D){
@@ -146,6 +166,16 @@ public class BrickManager {
         }
     }
 
+    /**
+     * Iterates through all the bricks involved in a collision in the time step
+     * Determines if they drop a power-up and if so which power-up
+     * Adjusts the score based on destroyed bricks
+     * Removes brick or replaces it with a brick that takes one fewer hit to destroy
+     * @param effectedBricks all the bricks that were involved in a collision in the time step
+     * @param root
+     * @return an integer corresponding to the power-up that is produced or an invalid power up number
+     * if no power-up is release from the brick
+     */
     public int handleEffectedBricks(List<GenericBrick> effectedBricks, Group root) {
         int powerUpToReturn = INVALID_POWER_UP_NUMBER;
         for (Iterator<GenericBrick> iterator = effectedBricks.iterator(); iterator.hasNext(); ) {
@@ -171,6 +201,7 @@ public class BrickManager {
         }
     }
 
+    // Implements boundaries to set the frequency of generating power-ups based on difficulty mode
     private int generatePowerUpUsingAdvancedRates() {
         double shouldGeneratePowerUp = Math.random();
         if (shouldGeneratePowerUp < ADVANCED_MODE_POWERUP_RATE){
@@ -182,6 +213,7 @@ public class BrickManager {
 
     }
 
+    // Implements boundaries to set the frequency of generating power-ups based on difficulty mode
     private int generatePowerUpUsingIntermediateRates() {
         double shouldGeneratePowerUp = Math.random();
         if (shouldGeneratePowerUp < INTERMEDIATE_MODE_POWERUP_RATE){
@@ -192,7 +224,7 @@ public class BrickManager {
         }
     }
 
-
+    // Implements boundaries to set the frequency of generating power-ups based on difficulty mode
     private int generatePowerUpUsingBeginningRates() {
         double shouldGeneratePowerUp = Math.random();
         if (shouldGeneratePowerUp < BEGINNING_MODE_POWERUP_RATE){
@@ -230,18 +262,34 @@ public class BrickManager {
         root.getChildren().removeAll(brick);
     }
 
+    /**
+     * Getter for bricks the BrickManager is managing
+     * @return myBricks
+     */
     public ArrayList<GenericBrick> getMyBricks() {
         return myBricks;
     }
 
+    /**
+     * Getter for current score
+     * @return myScore
+     */
     public int getMyScore() {
         return myScore;
     }
 
+    /**
+     * Getter for whether or not the player lost a life due to collision with a DangerBrick
+     * @return whether or not the player lost a life due to collision with a DangerBrick
+     */
     public boolean isLoseLifeDueToDangerBrick() {
         return loseLifeDueToDangerBrick;
     }
 
+    /**
+     * Setter for whether or not the player lost a life due to collision with a DangerBrick
+     * @param loseLifeDueToDangerBrick
+     */
     public void setLoseLifeDueToDangerBrick(boolean loseLifeDueToDangerBrick) {
         this.loseLifeDueToDangerBrick = loseLifeDueToDangerBrick;
     }
