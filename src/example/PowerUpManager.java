@@ -168,7 +168,6 @@ public class PowerUpManager {
         Set<BouncerDropBouncer> bouncersToBeRemoved = new HashSet<>();
         Set<GenericBrick> bricksToBeRemoved = new HashSet<>();
         for (BouncerDropBouncer bouncer : myBouncerDrop){
-//            bouncer.setX(2.0D);
             bricksToBeRemoved.addAll(bouncer.handleBouncerDropCollisions(elapsedTime, myBrickManager));
             System.out.println(bouncer.getMyYSpeed());
             if (bouncer.getMyYSpeed() < 0){
@@ -295,7 +294,7 @@ public class PowerUpManager {
      * Gets the Bouncers for the bouncer drop animation
      * @return myBouncerDrop
      */
-    public ArrayList<Bouncer> getMyBouncerDrop() {
+    public ArrayList<BouncerDropBouncer> getMyBouncerDrop() {
         return myBouncerDrop;
     }
 }
