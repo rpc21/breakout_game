@@ -268,7 +268,7 @@ public class TutorialMode extends GenericScreen{
 
     private void handleTutorialOneAnimation() {
         if (myTutorialNumber == 1 &&
-                (myPaddle.getMyVelocity() == Paddle.MAX_PADDLE_VELOCITY || myPaddle.getMyVelocity() == Paddle.MIN_PADDLE_VELOCITY)) {
+                (myPaddle.getMyXSpeed() == Paddle.MAX_PADDLE_VELOCITY || myPaddle.getMyXSpeed() == Paddle.MIN_PADDLE_VELOCITY)) {
             tutorialInstructionsText.setText("That is as fast as the paddle can go!");
         } else if (myTutorialNumber == 1) {
             tutorialInstructionsText.setText("You can change the paddle's speed with the left or right arrows, try " +
@@ -284,7 +284,7 @@ public class TutorialMode extends GenericScreen{
     private void resetPaddle() {
         myPaddle.setY(myScene.getHeight() * (BOTTOM_HBOX_DISPLAY_HEIGHT - 0.05));
         myPaddle.setX(myScene.getWidth()/2 - myPaddle.getBoundsInLocal().getWidth()/2);
-        myPaddle.setMyVelocity(0);
+        myPaddle.setMyXSpeed(0);
     }
 
     private void resetBouncer() {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Bouncer extends ImageView {
+public class Bouncer extends Sprite {
     private static final String BOUNCER_IMAGE = "ball.gif";
     private int myXSpeed;
     private int myYSpeed;
@@ -38,8 +38,6 @@ public class Bouncer extends ImageView {
     public Bouncer(Scene scene, GameDifficulty currentMode) {
         super(new Image(BOUNCER_IMAGE));
         myCurrentMode = currentMode;
-        myXSpeed = 0;
-        myYSpeed = 0;
         setX(scene.getWidth() / 2 - this.getBoundsInLocal().getWidth() / 2);
         setY(scene.getHeight() * 0.6D);
     }
@@ -58,7 +56,6 @@ public class Bouncer extends ImageView {
     public List<GenericBrick> handleBouncerCollisions(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
                                                       Group root){
         updatePosition(elapsedTime);
-        handleWallCollisions(scene);
         handlePaddleCollisions(paddle);
         List<GenericBrick> effectedBricks = findEffectedBricks(bricks, root);
         return effectedBricks;
@@ -89,41 +86,41 @@ public class Bouncer extends ImageView {
         return effectedBricks;
     }
 
-    private boolean bouncerCollidesWithRight(ImageView bouncer, ImageView otherObject) {
+    private boolean bouncerCollidesWithRight(Bouncer bouncer, ImageView otherObject) {
         return ((topLeftCornerIsInYBounds(bouncer, otherObject) || bottomLeftCornerIsInYBounds(bouncer, otherObject)) &&
                 bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() + 1 &&
                 bouncer.getX() >= otherObject.getX() + otherObject.getBoundsInParent().getWidth() - 1);
     }
 
-    private boolean topLeftCornerIsInYBounds(ImageView bouncer, ImageView otherObject) {
+    private boolean topLeftCornerIsInYBounds(Bouncer bouncer, ImageView otherObject) {
         return bouncer.getY() <= otherObject.getY() + otherObject.getBoundsInParent().getHeight() &&
                 bouncer.getY() >= otherObject.getY();
     }
 
-    private boolean bottomLeftCornerIsInYBounds(ImageView bouncer, ImageView otherObject) {
+    private boolean bottomLeftCornerIsInYBounds(Bouncer bouncer, ImageView otherObject) {
         return bouncer.getY() + bouncer.getBoundsInParent().getHeight() <= otherObject.getY() + otherObject.getBoundsInParent().getHeight() &&
                 bouncer.getY() + bouncer.getBoundsInParent().getHeight() >= otherObject.getY();
     }
 
 
-    private boolean bouncerCollidesWithLeft(ImageView bouncer, ImageView otherObject) {
+    private boolean bouncerCollidesWithLeft(Bouncer bouncer, ImageView otherObject) {
         return ((topLeftCornerIsInYBounds(bouncer, otherObject) || bottomLeftCornerIsInYBounds(bouncer, otherObject)) &&
                 bouncer.getX() + bouncer.getBoundsInParent().getWidth() <= otherObject.getX() + 1 &&
                 bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX() - 1);
     }
 
-    private boolean bouncerCollidesWithBottom(ImageView bouncer, ImageView otherObject) {
+    private boolean bouncerCollidesWithBottom(Bouncer bouncer, ImageView otherObject) {
         return ((leftSideIsInXBounds(bouncer, otherObject) || rightSideIsInXBounds(bouncer, otherObject))&&
                 bouncer.getY() <= otherObject.getY() + otherObject.getBoundsInParent().getWidth() + 1 &&
                 bouncer.getY() >= otherObject.getY() + otherObject.getBoundsInParent().getHeight() - 1);
     }
 
-    private boolean leftSideIsInXBounds(ImageView bouncer, ImageView otherObject) {
+    private boolean leftSideIsInXBounds(Bouncer bouncer, ImageView otherObject) {
         return bouncer.getX() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
                 bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX();
     }
 
-    private boolean rightSideIsInXBounds(ImageView bouncer, ImageView otherObject) {
+    private boolean rightSideIsInXBounds(Bouncer bouncer, ImageView otherObject) {
         return bouncer.getX() + bouncer.getBoundsInParent().getWidth() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
                 bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX();
     }
@@ -137,7 +134,7 @@ public class Bouncer extends ImageView {
      */
     public void handlePaddleCollisions(Paddle paddle) {
         if (bouncerCollidesWithTop(this, paddle)){
-            this.myXSpeed += paddle.getMyVelocity() / 2;
+            this.myXSpeed += paddle.getMyXSpeed() / 2;
             this.myYSpeed *= -1;
         }
         if (myXSpeed > myCurrentMode.getMaxBouncerXSpeed()){
@@ -148,25 +145,21 @@ public class Bouncer extends ImageView {
         }
     }
 
-    private boolean bouncerCollidesWithTop(ImageView bouncer, ImageView otherObject) {
+    private boolean bouncerCollidesWithTop(Bouncer bouncer, ImageView otherObject) {
         return ((leftSideIsInXBounds(bouncer, otherObject) || rightSideIsInXBounds(bouncer, otherObject)) &&
                 bouncer.getY() + bouncer.getBoundsInParent().getHeight() <= otherObject.getY() + 1 &&
                 bouncer.getY() + bouncer.getBoundsInParent().getHeight() >= otherObject.getY() - 1);
     }
 
-    private void updatePosition(double elapsedTime) {
+    /**
+     * Updates the bouncers position based on current position, velocity and elapsed time
+     * @param elapsedTime
+     */
+    public void updatePosition(double elapsedTime) {
         this.setX(this.getX() + myXSpeed * elapsedTime);
         this.setY(this.getY() + myYSpeed * elapsedTime);
     }
 
-    private void handleWallCollisions(Scene scene) {
-        if (this.getX() <= 0 || this.getX() + this.getBoundsInLocal().getWidth() >= scene.getWidth()) {
-            this.myXSpeed *= -1;
-        }
-        if (this.getY() <= 0 || this.getY() + this.getBoundsInLocal().getHeight() >= scene.getHeight()) {
-            this.myYSpeed *= -1;
-        }
-    }
 
     /**
      * Getter for Bouncer speed in Y direction

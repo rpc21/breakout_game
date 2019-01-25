@@ -1,13 +1,14 @@
 package example;
 
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class to handle the power-ups
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public class PowerUpManager {
 
+    public static final int INVALID_POWER_UP_NUMBER = 589302;
     private static final double EXTRA_LONG_PADDLE_SIZE = 1.5;
     private static final int BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP = 15;
     public static final int EXTRA_PADDLE_POWERUP_NUMBER = 0;
@@ -28,7 +30,7 @@ public class PowerUpManager {
     private int[] myAvailablePowerUps;
     private Paddle myExtraPaddle;
     private Paddle myLongPaddle;
-    private ArrayList<Bouncer> myBouncerDrop;
+    private ArrayList<BouncerDropBouncer> myBouncerDrop;
     private HBox myDisplay;
     private Group root;
     private double myExtraPaddleTimeRemaining;
@@ -77,7 +79,7 @@ public class PowerUpManager {
     private void resetMyBouncerDrop() {
         myBouncerDrop.clear();
         for (int i = 0; i < BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP; i++){
-            Bouncer bouncer = new Bouncer(root.getScene());
+            BouncerDropBouncer bouncer = new BouncerDropBouncer(root.getScene());
             bouncer.setY(2.0D);
             bouncer.setX(i * root.getScene().getWidth() / BOUNCERS_TO_CREATE_FOR_BOUNCER_DROP);
             bouncer.setMyYSpeed(100);
@@ -156,20 +158,18 @@ public class PowerUpManager {
         myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] = myAvailablePowerUps[EXTRA_PADDLE_POWERUP_NUMBER] - 1;
         myExtraPaddleTimeRemaining = POWERUP_LIFETIME;
         myExtraPaddle.setX(myGamePaddle.getX() + root.getScene().getWidth()/2);
-        myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
+        myExtraPaddle.setMyXSpeed(myGamePaddle.getMyXSpeed());
         if (!root.getChildren().contains(myExtraPaddle)){
             root.getChildren().add(myExtraPaddle);
         }
     }
 
     private void updateBouncerDropBouncers(double elapsedTime) {
-        List<Bouncer> bouncersToBeRemoved = new ArrayList<>();
-        List<GenericBrick> bricksToBeRemoved = new ArrayList<>();
-        for (Bouncer bouncer : myBouncerDrop){
+        Set<BouncerDropBouncer> bouncersToBeRemoved = new HashSet<>();
+        Set<GenericBrick> bricksToBeRemoved = new HashSet<>();
+        for (BouncerDropBouncer bouncer : myBouncerDrop){
 //            bouncer.setX(2.0D);
-            bricksToBeRemoved.addAll(bouncer.handleBouncerCollisions(elapsedTime, root.getScene(), myGamePaddle,
-                    myBrickManager.getMyBricks(),
-                    root));
+            bricksToBeRemoved.addAll(bouncer.handleBouncerDropCollisions(elapsedTime, myBrickManager));
             System.out.println(bouncer.getMyYSpeed());
             if (bouncer.getMyYSpeed() < 0){
                 bouncersToBeRemoved.add(bouncer);
@@ -220,7 +220,7 @@ public class PowerUpManager {
             root.getChildren().remove(myExtraPaddle);
         }
         myExtraPaddle.updatePaddlePosition(elapsedTime, root.getScene());
-        myExtraPaddle.setMyVelocity(myGamePaddle.getMyVelocity());
+        myExtraPaddle.setMyXSpeed(myGamePaddle.getMyXSpeed());
         if (root.getChildren().contains(myExtraPaddle) && myExtraPaddleTimeRemaining > 0) {
             myGameBouncer.handlePaddleCollisions(myExtraPaddle);
         }

@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
  * Abstract class that provides the basic methods for the various brick types
  * Subclasses: OneHitBrick, TwoHitBrick, ThreeHitBrick, DangerBrick, PermanentBrick
  */
-public abstract class GenericBrick extends ImageView {
+public abstract class GenericBrick extends Sprite {
 
     public static final int GENERIC_BRICK_POINT_VALUE = 10;
     public static final String ONE_HIT_BRICK_IMAGE = "brick1.gif";

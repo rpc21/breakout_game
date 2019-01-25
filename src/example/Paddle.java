@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Paddle extends ImageView {
+public class Paddle extends Sprite {
 
 
     public static final int MAX_PADDLE_VELOCITY = 120;
@@ -12,14 +12,14 @@ public class Paddle extends ImageView {
     public static final int MIN_PADDLE_VELOCITY = -120;
     private static final String PADDLE_IMAGE = "paddle.gif";
 
-    private int myVelocity;
+    private int myXSpeed;
 
     /**
      * Getter for paddle velocity
      * @return myVelocity
      */
-    public int getMyVelocity() {
-        return myVelocity;
+    public int getMyXSpeed() {
+        return myXSpeed;
     }
 
     /**
@@ -30,15 +30,15 @@ public class Paddle extends ImageView {
         super(new Image(PADDLE_IMAGE));
         setX(scene.getWidth() / 2 - this.getBoundsInLocal().getWidth() / 2);
         setY(scene.getHeight() * 0.9);
-        myVelocity = 0;
+        myXSpeed = 0;
     }
 
     /**
      * increases the Paddle velocity by the Paddle's acceleration
      */
     public void increaseVelocity(){
-        if (myVelocity < MAX_PADDLE_VELOCITY){
-            myVelocity += PADDLE_ACCELERATION;
+        if (myXSpeed < MAX_PADDLE_VELOCITY){
+            myXSpeed += PADDLE_ACCELERATION;
         }
 
     }
@@ -47,8 +47,8 @@ public class Paddle extends ImageView {
      * decreases the Paddle velocity by the Paddle's acceleration
      */
     public void decreaseVelocity(){
-        if (myVelocity > MIN_PADDLE_VELOCITY){
-            myVelocity -= PADDLE_ACCELERATION;
+        if (myXSpeed > MIN_PADDLE_VELOCITY){
+            myXSpeed -= PADDLE_ACCELERATION;
         }
     }
 
@@ -59,7 +59,7 @@ public class Paddle extends ImageView {
      * @param scene
      */
     public void updatePaddlePosition(double elapsedTime, Scene scene){
-        setX(this.getX() + myVelocity * elapsedTime);
+        setX(this.getX() + myXSpeed * elapsedTime);
         if(this.getX() > scene.getWidth()){
             setX(this.getX() % scene.getWidth());
         }
@@ -72,7 +72,7 @@ public class Paddle extends ImageView {
      * Setter for Paddle velocity
      * @param myVelocity
      */
-    public void setMyVelocity(int myVelocity) {
-        this.myVelocity = myVelocity;
+    public void setMyXSpeed(int myVelocity) {
+        this.myXSpeed = myVelocity;
     }
 }

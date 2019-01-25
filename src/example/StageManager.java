@@ -19,7 +19,8 @@ public class StageManager {
 
 
     /**
-     * StageManager Constructor
+     * StageManager Constructor creates the StageManager and initializes all screens being managed
+     * Sets the currentScreen to a GenericScreen in teh beginning.
      * @param stage
      */
     public StageManager(Stage stage) {

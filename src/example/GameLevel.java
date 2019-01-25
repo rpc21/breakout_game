@@ -266,7 +266,7 @@ public class GameLevel extends GenericScreen{
         initializeBouncer(myScene);
         initializePaddle(myScene);
         myPowerUpManager.resetPowerUpManager(myBouncer, myPaddle);
-        myPaddle.setMyVelocity(0);
+        myPaddle.setMyXSpeed(0);
         root.getChildren().addAll(myPaddle,myBouncer);
     }
 

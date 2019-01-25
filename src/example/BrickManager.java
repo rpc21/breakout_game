@@ -6,9 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * BrickManager class is in charge of managing all the bricks for a level
@@ -22,14 +20,13 @@ public class BrickManager {
     private static final String LEVEL_ONE = "resources/level_one_layout.txt";
     private static final String LEVEL_TWO = "resources/level_two_layout.txt";
     private static final String LEVEL_THREE = "resources/level_three_layout.txt";
-    private static final int INVALID_POWER_UP_NUMBER = 589302;
     private static final double ADVANCED_MODE_POWERUP_RATE = 0.15;
     private static final double INTERMEDIATE_MODE_POWERUP_RATE = 0.2;
     private static final double BEGINNING_MODE_POWERUP_RATE = 0.25;
     private static final int NUMBER_OF_POSSIBLE_POWERUPS = 6;
 
     private File pathToBrickLayout;
-    private ArrayList<GenericBrick> myBricks;
+    private Set<GenericBrick> myBricks;
 
 
     private int myCurrentMode;
@@ -68,7 +65,7 @@ public class BrickManager {
         else{
             pathToBrickLayout = new File(LEVEL_ONE);
         }
-        myBricks = new ArrayList<>();
+        myBricks = new HashSet<>();
         initializeBlocksFromFile();
     }
 
@@ -176,8 +173,8 @@ public class BrickManager {
      * @return an integer corresponding to the power-up that is produced or an invalid power up number
      * if no power-up is release from the brick
      */
-    public int handleEffectedBricks(List<GenericBrick> effectedBricks, Group root) {
-        int powerUpToReturn = INVALID_POWER_UP_NUMBER;
+    public int handleEffectedBricks(Set<GenericBrick> effectedBricks, Group root) {
+        int powerUpToReturn = PowerUpManager.INVALID_POWER_UP_NUMBER;
         for (Iterator<GenericBrick> iterator = effectedBricks.iterator(); iterator.hasNext(); ) {
             GenericBrick brick = iterator.next();
             if (effectedBricks.contains(brick)){
@@ -191,47 +188,22 @@ public class BrickManager {
 
     private int generatePowerUpToReturn() {
         if (myCurrentMode == GameDifficulty.BEGINNING_MODE){
-            return generatePowerUpUsingBeginningRates();
+            return generatePowerUpUsingSpecifiedRate(BEGINNING_MODE_POWERUP_RATE);
         }
         else if (myCurrentMode == GameDifficulty.INTERMEDIATE_MODE){
-            return generatePowerUpUsingIntermediateRates();
+            return generatePowerUpUsingSpecifiedRate(INTERMEDIATE_MODE_POWERUP_RATE);
         }
         else{
-            return generatePowerUpUsingAdvancedRates();
+            return generatePowerUpUsingSpecifiedRate(ADVANCED_MODE_POWERUP_RATE);
         }
     }
 
-    // Implements boundaries to set the frequency of generating power-ups based on difficulty mode
-    private int generatePowerUpUsingAdvancedRates() {
+    private int generatePowerUpUsingSpecifiedRate(double advancedModePowerupRate) {
         double shouldGeneratePowerUp = Math.random();
-        if (shouldGeneratePowerUp < ADVANCED_MODE_POWERUP_RATE){
+        if (shouldGeneratePowerUp < advancedModePowerupRate) {
             return (int) (Math.random() * NUMBER_OF_POSSIBLE_POWERUPS);
-        }
-        else {
-            return INVALID_POWER_UP_NUMBER;
-        }
-
-    }
-
-    // Implements boundaries to set the frequency of generating power-ups based on difficulty mode
-    private int generatePowerUpUsingIntermediateRates() {
-        double shouldGeneratePowerUp = Math.random();
-        if (shouldGeneratePowerUp < INTERMEDIATE_MODE_POWERUP_RATE){
-            return (int) (Math.random() * NUMBER_OF_POSSIBLE_POWERUPS);
-        }
-        else {
-            return INVALID_POWER_UP_NUMBER;
-        }
-    }
-
-    // Implements boundaries to set the frequency of generating power-ups based on difficulty mode
-    private int generatePowerUpUsingBeginningRates() {
-        double shouldGeneratePowerUp = Math.random();
-        if (shouldGeneratePowerUp < BEGINNING_MODE_POWERUP_RATE){
-            return (int) (Math.random() * NUMBER_OF_POSSIBLE_POWERUPS);
-        }
-        else {
-            return INVALID_POWER_UP_NUMBER;
+        } else {
+            return PowerUpManager.INVALID_POWER_UP_NUMBER;
         }
     }
 
@@ -266,7 +238,7 @@ public class BrickManager {
      * Getter for bricks the BrickManager is managing
      * @return myBricks
      */
-    public ArrayList<GenericBrick> getMyBricks() {
+    public Set<GenericBrick> getMyBricks() {
         return myBricks;
     }
 
