@@ -61,10 +61,6 @@ Cheat keys:
 Known Bugs:
 * If Bouncer hits the corner of a brick it will count as two collisions
 and sometime destroy bricks on only "one" hit.
-* Power-up animations are not included in Tutorial which would have been a 
-nice touch.
-* If you hit 'B' to activate another BouncerDrop before the previous one
-completed, the first one does not finish and the Bouncers get stuck on scene.
 
 
 Extra credit: (Interpreted as extra feature we were supposed to implement)
