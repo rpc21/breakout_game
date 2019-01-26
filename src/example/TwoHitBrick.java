@@ -33,4 +33,14 @@ public class TwoHitBrick extends GenericBrick {
 
     }
 
+    @Override
+    public int getMyPointValue() {
+        return myPointValue;
+    }
+
+    @Override
+    public GenericBrick getReplacementBrick() {
+        return new OneHitBrick(this);
+    }
+
 }

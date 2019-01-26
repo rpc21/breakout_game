@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
  */
 public class OneHitBrick extends GenericBrick {
     private static final String ONE_HIT_BRICK_IMAGE = "brick1.gif";
+    private static final int ONE_HIT_BRICK_POINT_VALUE = 10;
 
     private int myPointValue;
 
@@ -17,7 +18,7 @@ public class OneHitBrick extends GenericBrick {
      */
     public OneHitBrick(GenericBrick brick){
         super(brick.getX(), brick.getY(), brick.getFitWidth(), new Image(ONE_HIT_BRICK_IMAGE));
-        myPointValue = 10;
+        myPointValue = ONE_HIT_BRICK_POINT_VALUE;
     }
 
     /**
@@ -29,4 +30,15 @@ public class OneHitBrick extends GenericBrick {
     public OneHitBrick(double xPos, double yPos, double brickLength){
         super(xPos, yPos, brickLength, new Image(ONE_HIT_BRICK_IMAGE));
     }
+
+    @Override
+    public int getMyPointValue() {
+        return myPointValue;
+    }
+
+    @Override
+    public GenericBrick getReplacementBrick() {
+        return null;
+    }
+
 }

@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 public class DangerBrick extends GenericBrick {
 
     public static final String DANGER_BRICK_IMAGE = "brick10.gif";
+    private static final int DANGER_BRICK_POINT_VALUE = 0;
 
     private int myPointValue;
 
@@ -19,11 +20,21 @@ public class DangerBrick extends GenericBrick {
      */
     public DangerBrick(double xPos, double yPos, double brickLength){
         super(xPos, yPos, brickLength, new Image(DANGER_BRICK_IMAGE));
-        myPointValue = 0;
+        myPointValue = DANGER_BRICK_POINT_VALUE;
     }
 
     @Override
     public int getMyPointValue() {
         return myPointValue;
+    }
+
+    @Override
+    public GenericBrick getReplacementBrick() {
+        return null;
+    }
+
+    @Override
+    public boolean costsLife() {
+        return true;
     }
 }

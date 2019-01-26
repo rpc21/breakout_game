@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 public class PermanentBrick extends GenericBrick {
 
     public static final String PERMANENT_BRICK_IMAGE = "brick4.gif";
+    private static final int PERMANENT_BRICK_POINT_VALUE = 0;
     private int myPointValue;
 
     /**
@@ -19,11 +20,17 @@ public class PermanentBrick extends GenericBrick {
      */
     public PermanentBrick(double xPos, double yPos, double brickLength){
         super(xPos, yPos, brickLength, new Image(PERMANENT_BRICK_IMAGE));
-        myPointValue = 0;
+        myPointValue = PERMANENT_BRICK_POINT_VALUE;
     }
 
     @Override
     public int getMyPointValue() {
         return myPointValue;
     }
+
+    @Override
+    public GenericBrick getReplacementBrick() {
+        return this;
+    }
+
 }

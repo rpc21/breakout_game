@@ -28,7 +28,7 @@ public class SpriteManager {
         bricksToHandle = new HashSet<>();
         lostLifeUpdate = false;
         scoreUpdate = 0;
-        newPowerUp =
+        newPowerUp = PowerUpManager.INVALID_POWER_UP_NUMBER;
 
     }
 

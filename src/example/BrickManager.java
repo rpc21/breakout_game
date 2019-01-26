@@ -20,16 +20,12 @@ public class BrickManager {
     private static final String LEVEL_ONE = "resources/level_one_layout.txt";
     private static final String LEVEL_TWO = "resources/level_two_layout.txt";
     private static final String LEVEL_THREE = "resources/level_three_layout.txt";
-    private static final double ADVANCED_MODE_POWERUP_RATE = 0.15;
-    private static final double INTERMEDIATE_MODE_POWERUP_RATE = 0.2;
-    private static final double BEGINNING_MODE_POWERUP_RATE = 0.25;
-    private static final int NUMBER_OF_POSSIBLE_POWERUPS = 6;
 
     private File pathToBrickLayout;
     private Set<GenericBrick> myBricks;
 
 
-    private int myCurrentMode;
+    private GameDifficulty myCurrentMode;
     private int myScore;
     private boolean loseLifeDueToDangerBrick;
 
@@ -55,7 +51,7 @@ public class BrickManager {
     public BrickManager(int levelNumber, GameDifficulty currentMode){
         myScore = 0;
         loseLifeDueToDangerBrick = false;
-        myCurrentMode = currentMode.getMyCurrentMode();
+        myCurrentMode = currentMode;
         if (levelNumber == 2){
             pathToBrickLayout = new File(LEVEL_TWO);
         }
@@ -70,75 +66,6 @@ public class BrickManager {
     }
 
 
-    private GenericBrick generateBrick(double xPos, double yPos, double brickLength){
-        if (myCurrentMode == GameDifficulty.ADVANCED_MODE){
-            return generateAdvancedBrick(xPos, yPos, brickLength);
-        }
-        else if (myCurrentMode == GameDifficulty.INTERMEDIATE_MODE){
-            return generateIntermediateBrick(xPos, yPos, brickLength);
-        }
-        else {
-            return generateBeginningBrick(xPos, yPos, brickLength);
-        }
-
-
-    }
-
-    // Implements boundaries to set the frequency of generating different kinds of level appropriate bricks
-    private GenericBrick generateBeginningBrick(double xPos, double yPos, double brickLength) {
-        double randomNumber = Math.random();
-        if (randomNumber <= 0.6D){
-            return new OneHitBrick(xPos,yPos,brickLength);
-        }
-        else if (randomNumber <= 0.9D){
-            return new TwoHitBrick(xPos,yPos,brickLength);
-        }
-        else{
-            return new ThreeHitBrick(xPos,yPos,brickLength);
-        }
-    }
-
-    // Implements boundaries to set the frequency of generating different kinds of level appropriate bricks
-    private GenericBrick generateIntermediateBrick(double xPos, double yPos, double brickLength) {
-        double randomNumber = Math.random();
-        if (randomNumber <= 0.4D){
-            return new OneHitBrick(xPos,yPos,brickLength);
-        }
-        else if (randomNumber <= 0.6D){
-            return new TwoHitBrick(xPos,yPos,brickLength);
-        }
-        else if (randomNumber <= 0.8D){
-            return new ThreeHitBrick(xPos, yPos, brickLength);
-        }
-        else if (randomNumber <= 0.95D){
-            return new PermanentBrick(xPos,yPos,brickLength);
-        }
-        else{
-            return new DangerBrick(xPos, yPos, brickLength);
-        }
-    }
-
-    // Implements boundaries to set the frequency of generating different kinds of level appropriate bricks
-    private GenericBrick generateAdvancedBrick(double xPos, double yPos, double brickLength) {
-        double randomNumber = Math.random();
-        if (randomNumber <= 0.3D){
-            return new OneHitBrick(xPos,yPos,brickLength);
-        }
-        else if (randomNumber <= 0.5D){
-            return new TwoHitBrick(xPos,yPos,brickLength);
-        }
-        else if (randomNumber <= 0.7D){
-            return new ThreeHitBrick(xPos, yPos, brickLength);
-        }
-        else if (randomNumber <= 0.9D){
-            return new PermanentBrick(xPos,yPos,brickLength);
-        }
-        else{
-            return new DangerBrick(xPos, yPos, brickLength);
-        }
-    }
-
-
     private void initializeBlocksFromFile() {
         // https://www.tutorialspoint.com/Reading-a-Text-file-in-java
         try (BufferedReader br = new BufferedReader(new FileReader(pathToBrickLayout))) {
@@ -150,8 +77,9 @@ public class BrickManager {
                 double brickSize = GamePlayer.SIZE * 0.8 / lineLength;
                 for(int i=0; i<brickLocations.length; i++){
                     if(brickLocations[i] == '-'){
-                        GenericBrick brickToAdd = generateBrick((double) i*GamePlayer.SIZE/lineLength + 0.1*brickSize,
-                                0.1*counter*GamePlayer.SIZE, brickSize);
+                        GenericBrick brickToAdd =
+                                myCurrentMode.generateBrick((double) i * GamePlayer.SIZE / lineLength + 0.1 * brickSize,
+                                0.1 * counter * GamePlayer.SIZE, brickSize);
                         myBricks.add(brickToAdd);
                     }
                 }
@@ -180,58 +108,21 @@ public class BrickManager {
             if (effectedBricks.contains(brick)){
                 myScore += brick.getMyPointValue();
                 removeOrReplaceBrick(brick, root);
-                powerUpToReturn = generatePowerUpToReturn();
+                powerUpToReturn = myCurrentMode.generatePowerUp();
             }
         }
         return powerUpToReturn;
     }
 
-    private int generatePowerUpToReturn() {
-        if (myCurrentMode == GameDifficulty.BEGINNING_MODE){
-            return generatePowerUpUsingSpecifiedRate(BEGINNING_MODE_POWERUP_RATE);
-        }
-        else if (myCurrentMode == GameDifficulty.INTERMEDIATE_MODE){
-            return generatePowerUpUsingSpecifiedRate(INTERMEDIATE_MODE_POWERUP_RATE);
-        }
-        else{
-            return generatePowerUpUsingSpecifiedRate(ADVANCED_MODE_POWERUP_RATE);
-        }
-    }
-
-    private int generatePowerUpUsingSpecifiedRate(double advancedModePowerupRate) {
-        double shouldGeneratePowerUp = Math.random();
-        if (shouldGeneratePowerUp < advancedModePowerupRate) {
-            return (int) (Math.random() * NUMBER_OF_POSSIBLE_POWERUPS);
-        } else {
-            return PowerUpManager.INVALID_POWER_UP_NUMBER;
-        }
-    }
-
     private void removeOrReplaceBrick(GenericBrick brick, Group root) {
-        if (brick instanceof DangerBrick){
-            loseLifeDueToDangerBrick = true;
-            myBricks.remove(brick);
-            root.getChildren().removeAll(brick);
-        }
-        if (brick instanceof ThreeHitBrick){
-            TwoHitBrick replacementBrick = new TwoHitBrick(brick);
-            replaceBrick(brick, root, replacementBrick);
-        }
-        else if (brick instanceof TwoHitBrick){
-            GenericBrick replacementBrick = new OneHitBrick(brick);
-            replaceBrick(brick, root, replacementBrick);
-        }
-        else if (brick instanceof OneHitBrick){
-            myBricks.remove(brick);
-            root.getChildren().removeAll(brick);
-        }
-    }
-
-    private void replaceBrick(GenericBrick brick, Group root, GenericBrick replacementBrick) {
-        myBricks.add(replacementBrick);
-        root.getChildren().add(replacementBrick);
+        GenericBrick replacementBrick = brick.getReplacementBrick();
+        loseLifeDueToDangerBrick = brick.costsLife();
         myBricks.remove(brick);
-        root.getChildren().removeAll(brick);
+        root.getChildren().remove(brick);
+        if (replacementBrick != null){
+            myBricks.add(replacementBrick);
+            root.getChildren().add(replacementBrick);
+        }
     }
 
     /**

@@ -5,9 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Bouncer extends Sprite {
     private static final String BOUNCER_IMAGE = "ball.gif";
@@ -53,16 +51,18 @@ public class Bouncer extends Sprite {
      * @param root
      * @return the bricks that the Bouncer collided with so they can be handled by the BrickManager
      */
-    public List<GenericBrick> handleBouncerCollisions(double elapsedTime, Scene scene, Paddle paddle, ArrayList<GenericBrick> bricks,
+    public Set<GenericBrick> handleBouncerCollisions(double elapsedTime, Scene scene, Paddle paddle,
+                                                      Set<GenericBrick> bricks,
                                                       Group root){
         updatePosition(elapsedTime);
+        handleWallCollisions(scene);
         handlePaddleCollisions(paddle);
-        List<GenericBrick> effectedBricks = findEffectedBricks(bricks, root);
+        Set<GenericBrick> effectedBricks = findEffectedBricks(bricks, root);
         return effectedBricks;
     }
 
-    private List<GenericBrick> findEffectedBricks(List<GenericBrick> bricks, Group root) {
-        List<GenericBrick> effectedBricks = new ArrayList<>();
+    private Set<GenericBrick> findEffectedBricks(Set<GenericBrick> bricks, Group root) {
+        Set<GenericBrick> effectedBricks = new HashSet<>();
         boolean bounceInXDirection = false;
         boolean bounceInYDirection = false;
         // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
@@ -123,6 +123,15 @@ public class Bouncer extends Sprite {
     private boolean rightSideIsInXBounds(Bouncer bouncer, ImageView otherObject) {
         return bouncer.getX() + bouncer.getBoundsInParent().getWidth() <= otherObject.getX() + otherObject.getBoundsInParent().getWidth() &&
                 bouncer.getX() + bouncer.getBoundsInParent().getWidth() >= otherObject.getX();
+    }
+
+    private void handleWallCollisions(Scene scene) {
+        if (this.getX() <= 0 || this.getX() + this.getBoundsInLocal().getWidth() >= scene.getWidth()) {
+            this.myXSpeed *= -1;
+        }
+        if (this.getY() <= 0 || this.getY() + this.getBoundsInLocal().getHeight() >= scene.getHeight()) {
+            this.myYSpeed *= -1;
+        }
     }
 
 

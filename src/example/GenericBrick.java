@@ -44,4 +44,12 @@ public abstract class GenericBrick extends Sprite {
     public int getMyPointValue() {
         return myPointValue;
     }
+
+    public GenericBrick getReplacementBrick(){
+        return null;
+    }
+
+    public boolean costsLife(){
+        return false;
+    }
 }

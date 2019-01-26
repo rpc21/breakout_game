@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TutorialMode extends GenericScreen{
     public static final int FRAMES_PER_SECOND = 60;
@@ -253,7 +254,7 @@ public class TutorialMode extends GenericScreen{
             centerHBoxText(myHBoxCenter, myScene.getHeight() * CENTER_HBOX_DISPLAY_HEIGHT, myScene);
             myPaddle.updatePaddlePosition(elapsedTime, myScene);
             handleTutorialOneAnimation();
-            myBouncer.handleBouncerCollisions(elapsedTime, myScene, myPaddle, new ArrayList<>(), root);
+            myBouncer.handleBouncerCollisions(elapsedTime, myScene, myPaddle, new HashSet<>(), root);
             handleLossCondition();
             myPowerUpManager.updatePowerUpStatus(elapsedTime);
         }

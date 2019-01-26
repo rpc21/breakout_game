@@ -24,6 +24,12 @@ public class GameDifficulty {
     private static final int ADVANCED_MODE_Y_SPEED = 120;
     private static final int ADVANCED_START_TIME = 120;
     private static final int ADVANCED_START_LIVES = 3;
+    private static final double ADVANCED_MODE_POWERUP_RATE = 0.15;
+    private static final double INTERMEDIATE_MODE_POWERUP_RATE = 0.2;
+    private static final double BEGINNING_MODE_POWERUP_RATE = 0.25;
+    private static final double[] BEGINNING_BRICK_GENERATOR_CUTOFFS = {0.6, 0.9, 1, 1};
+    private static final double[] INTERMEDIATE_BRICK_GENERATOR_CUTOFFS = {0.4, 0.6, 0.8, 0.95};
+    private static final double[] ADVANCED_BRICK_GENERATOR_CUTOFFS = {0.3, 0.5, 0.7, 0.9};
 
 
     private int maxBouncerXSpeed;
@@ -33,6 +39,8 @@ public class GameDifficulty {
     private int startLives;
     private String currentDifficultyString;
     private int myCurrentMode;
+    private double myPowerUpRate;
+    private double[] myBrickGeneratorCutoffs;
 
     /**
      * Getter for the Start Time
@@ -55,6 +63,8 @@ public class GameDifficulty {
             startTime = INTERMEDIATE_START_TIME;
             startLives = INTERMEDIATE_START_LIVES;
             currentDifficultyString = "Intermediate";
+            myPowerUpRate = INTERMEDIATE_MODE_POWERUP_RATE;
+            myBrickGeneratorCutoffs = INTERMEDIATE_BRICK_GENERATOR_CUTOFFS;
         }
         else if (currentMode == ADVANCED_MODE){
             maxBouncerXSpeed = ADVANCED_MODE_MAX_X_SPEED;
@@ -63,6 +73,8 @@ public class GameDifficulty {
             startTime = ADVANCED_START_TIME;
             startLives = ADVANCED_START_LIVES;
             currentDifficultyString = "Advanced";
+            myPowerUpRate = ADVANCED_MODE_POWERUP_RATE;
+            myBrickGeneratorCutoffs = ADVANCED_BRICK_GENERATOR_CUTOFFS;
         }
         else {
             maxBouncerXSpeed = BEGINNING_MODE_MAX_X_SPEED;
@@ -71,6 +83,36 @@ public class GameDifficulty {
             startTime = BEGINNING_START_TIME;
             startLives = BEGINNING_START_LIVES;
             currentDifficultyString = "Beginner";
+            myPowerUpRate = BEGINNING_MODE_POWERUP_RATE;
+            myBrickGeneratorCutoffs = BEGINNING_BRICK_GENERATOR_CUTOFFS;
+        }
+    }
+
+    public GenericBrick generateBrick(double xPos, double yPos, double brickLength){
+        double randomNumber = Math.random();
+        if (randomNumber < myBrickGeneratorCutoffs[0]){
+            return new OneHitBrick(xPos, yPos, brickLength);
+        }
+        else if (randomNumber <= myBrickGeneratorCutoffs[1]){
+            return new TwoHitBrick(xPos,yPos,brickLength);
+        }
+        else if (randomNumber <= myBrickGeneratorCutoffs[2]){
+            return new ThreeHitBrick(xPos, yPos, brickLength);
+        }
+        else if (randomNumber <= myBrickGeneratorCutoffs[3]){
+            return new PermanentBrick(xPos,yPos,brickLength);
+        }
+        else{
+            return new DangerBrick(xPos, yPos, brickLength);
+        }
+    }
+
+    public int generatePowerUp() {
+        double shouldGeneratePowerUp = Math.random();
+        if (shouldGeneratePowerUp < myPowerUpRate) {
+            return (int) (Math.random() * PowerUpManager.NUMBER_OF_POSSIBLE_POWERUPS);
+        } else {
+            return PowerUpManager.INVALID_POWER_UP_NUMBER;
         }
     }
 

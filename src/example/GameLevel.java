@@ -11,6 +11,7 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class to handle all the game play
@@ -35,7 +36,7 @@ public class GameLevel extends GenericScreen{
     private Paddle myPaddle;
     private StageManager myStageManager;
     private Scene myScene;
-    private ArrayList<GenericBrick> myBricks;
+    private Set<GenericBrick> myBricks;
     private Group root;
     private int myLevelNumber;
     private BrickManager myBrickManager;
@@ -161,7 +162,8 @@ public class GameLevel extends GenericScreen{
         if (activeGameMode && !myPowerUpManager.isInDestroyMode() && !myPowerUpManager.isInBallDropperMode()) {
             timeRemaining -= elapsedTime;
             myPaddle.updatePaddlePosition(elapsedTime,myScene);
-            List<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle, myBricks,
+            Set<GenericBrick> effectedBricks = myBouncer.handleBouncerCollisions(elapsedTime,myScene, myPaddle,
+                    myBricks,
                     root);
             cleanUpBricksAndCollectPowerUps(effectedBricks);
             myPowerUpManager.updatePowerUpStatus(elapsedTime);
@@ -176,7 +178,7 @@ public class GameLevel extends GenericScreen{
         myPowerUpManager.displayStateOfPowerUps();
     }
 
-    private void cleanUpBricksAndCollectPowerUps(List<GenericBrick> effectedBricks) {
+    private void cleanUpBricksAndCollectPowerUps(Set<GenericBrick> effectedBricks) {
         int powerUpToHandle = myBrickManager.handleEffectedBricks(effectedBricks, root);
         if (isValidPowerUpNumber(powerUpToHandle)){
             handlePowerUp(powerUpToHandle);

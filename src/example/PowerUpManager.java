@@ -25,6 +25,7 @@ public class PowerUpManager {
     public static final int BALL_DROPPER_POWERUP_NUMBER = 2;
     public static final int LONG_PADDLE_POWERUP_NUMBER =3;
     private static final double POWERUP_LIFETIME = 10.0D;
+    public static final int NUMBER_OF_POSSIBLE_POWERUPS = 6;
 
 
     private int[] myAvailablePowerUps;
