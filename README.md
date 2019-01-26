@@ -73,4 +73,7 @@ player to practice moving the paddle.
 
 
 ### Impressions
+This project has taught me so much and is such a huge challenge coming from CompSci 201 with no JavaFX experience.
+It would be nice to see a really well designed game implementation after the project is over to get ideas about how
+it could have been designed.
 

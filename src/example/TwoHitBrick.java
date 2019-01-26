@@ -14,9 +14,9 @@ public class TwoHitBrick extends GenericBrick {
 
     /**
      * TwoHitBrick constructor
-     * @param xPos
-     * @param yPos
-     * @param brickLength
+     * @param xPos x position of the top left corner of the image
+     * @param yPos y position of the top left corner of the image
+     * @param brickLength length of the brick to be generated
      */
     public TwoHitBrick(double xPos, double yPos, double brickLength){
         super(xPos, yPos, brickLength, new Image(TWO_HIT_BRICK_IMAGE));
@@ -30,7 +30,6 @@ public class TwoHitBrick extends GenericBrick {
     public TwoHitBrick(GenericBrick brick){
         super(brick.getX(),brick.getY(),brick.getFitWidth(),new Image(TWO_HIT_BRICK_IMAGE));
         myPointValue = TWO_HIT_BRICK_POINT_VALUE;
-
     }
 
     /**

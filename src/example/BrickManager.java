@@ -65,7 +65,6 @@ public class BrickManager {
         initializeBlocksFromFile();
     }
 
-
     private void initializeBlocksFromFile() {
         // https://www.tutorialspoint.com/Reading-a-Text-file-in-java
         try (BufferedReader br = new BufferedReader(new FileReader(pathToBrickLayout))) {
