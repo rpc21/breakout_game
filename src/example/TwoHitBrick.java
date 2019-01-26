@@ -33,11 +33,19 @@ public class TwoHitBrick extends GenericBrick {
 
     }
 
+    /**
+     * Getter for the point value of the brick
+     * @return myPointValue
+     */
     @Override
     public int getMyPointValue() {
         return myPointValue;
     }
 
+    /**
+     * When TwoHitBricks are hit they turn into OneHitBricks
+     * @return new OneHitBrick to be added to the scene in place of the TwoHitBrick
+     */
     @Override
     public GenericBrick getReplacementBrick() {
         return new OneHitBrick(this);

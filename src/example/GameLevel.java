@@ -9,8 +9,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -136,7 +134,6 @@ public class GameLevel extends GenericScreen{
 
     private void generateBricks(Scene scene) {
         myBricks = myBrickManager.getMyBricks();
-
     }
 
     private void initializeBouncer(Scene scene){

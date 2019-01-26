@@ -23,11 +23,19 @@ public class PermanentBrick extends GenericBrick {
         myPointValue = PERMANENT_BRICK_POINT_VALUE;
     }
 
+    /**
+     * Getter for the point value of the brick
+     * @return myPointValue
+     */
     @Override
     public int getMyPointValue() {
         return myPointValue;
     }
 
+    /**
+     * When PermanentBricks are hit they remain unchanged so just return the same brick
+     * @return this
+     */
     @Override
     public GenericBrick getReplacementBrick() {
         return this;

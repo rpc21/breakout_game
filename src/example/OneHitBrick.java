@@ -31,11 +31,19 @@ public class OneHitBrick extends GenericBrick {
         super(xPos, yPos, brickLength, new Image(ONE_HIT_BRICK_IMAGE));
     }
 
+    /**
+     * Getter for the point value of the brick
+     * @return myPointValue
+     */
     @Override
     public int getMyPointValue() {
         return myPointValue;
     }
 
+    /**
+     * When OneHitBricks are hit they are removed from the screen
+     * @return null (remove from the scene)
+     */
     @Override
     public GenericBrick getReplacementBrick() {
         return null;

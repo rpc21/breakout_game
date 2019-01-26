@@ -97,7 +97,7 @@ public class BrickManager {
      * Adjusts the score based on destroyed bricks
      * Removes brick or replaces it with a brick that takes one fewer hit to destroy
      * @param effectedBricks all the bricks that were involved in a collision in the time step
-     * @param root
+     * @param root root of the current scene
      * @return an integer corresponding to the power-up that is produced or an invalid power up number
      * if no power-up is release from the brick
      */
@@ -126,7 +126,7 @@ public class BrickManager {
     }
 
     /**
-     * Getter for bricks the BrickManager is managing
+     * Getter for bricks the BrickManager is currently managing
      * @return myBricks
      */
     public Set<GenericBrick> getMyBricks() {
@@ -151,7 +151,7 @@ public class BrickManager {
 
     /**
      * Setter for whether or not the player lost a life due to collision with a DangerBrick
-     * @param loseLifeDueToDangerBrick
+     * @param loseLifeDueToDangerBrick whether the player should lose life due to collision with danger brick
      */
     public void setLoseLifeDueToDangerBrick(boolean loseLifeDueToDangerBrick) {
         this.loseLifeDueToDangerBrick = loseLifeDueToDangerBrick;

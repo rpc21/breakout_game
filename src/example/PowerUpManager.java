@@ -171,7 +171,7 @@ public class PowerUpManager {
         for (BouncerDropBouncer bouncer : myBouncerDrop){
             bricksToBeRemoved.addAll(bouncer.handleBouncerDropCollisions(elapsedTime, myBrickManager));
             System.out.println(bouncer.getMyYSpeed());
-            if (bouncer.getMyYSpeed() < 0){
+            if (bouncer.getMyYSpeed() < 0 || bouncer.getY() > myGamePaddle.getY()){
                 bouncersToBeRemoved.add(bouncer);
             }
         }

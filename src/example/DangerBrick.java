@@ -23,16 +23,28 @@ public class DangerBrick extends GenericBrick {
         myPointValue = DANGER_BRICK_POINT_VALUE;
     }
 
+    /**
+     * Getter for the point value of the brick
+     * @return myPointValue
+     */
     @Override
     public int getMyPointValue() {
         return myPointValue;
     }
 
+    /**
+     * When DangerBricks are hit they are removed from the screen
+     * @return null (remove from the scene)
+     */
     @Override
     public GenericBrick getReplacementBrick() {
         return null;
     }
 
+    /**
+     * DangerBricks cost the player a life if they hit them
+     * @return true
+     */
     @Override
     public boolean costsLife() {
         return true;

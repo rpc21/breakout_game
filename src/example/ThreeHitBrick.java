@@ -23,11 +23,19 @@ public class ThreeHitBrick extends GenericBrick{
         myPointValue = THREE_HIT_BRICK_POINT_VALUE;
     }
 
+    /**
+     * Getter for the point value of the brick
+     * @return myPointValue
+     */
     @Override
     public int getMyPointValue() {
         return myPointValue;
     }
 
+    /**
+     * When ThreeHitBricks are hit they are turned into TwoHitBricks
+     * @return new TwoHitBrick in its place
+     */
     @Override
     public GenericBrick getReplacementBrick() {
         return new TwoHitBrick(this);
